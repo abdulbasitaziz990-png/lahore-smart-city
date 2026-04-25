@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insights — Lahore Smart City Watch</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+  <style>
+    .insights-hero {
+      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%);
+      color: white;
+      padding: 120px 0 60px;
+      margin-top: 70px;
+    }
+    .insight-card {
+      background: var(--c-white);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--c-surface-high);
+      margin-bottom: 24px;
+    }
+    .chart-container {
+      height: 300px;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      padding: 20px 0;
+    }
+    .chart-bar {
+      flex: 1;
+      background: var(--c-primary);
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      min-height: 4px;
+      transition: height 0.5s ease;
+      position: relative;
+    }
+    .chart-bar-label {
+      position: absolute;
+      bottom: -24px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--c-muted);
+    }
+    .chart-bar-value {
+      position: absolute;
+      top: -20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--c-primary);
+    }
+    .trend-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .trend-up { color: var(--c-danger); }
+    .trend-down { color: var(--c-success); }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="topnav-brand" href="index.html">
+    <span class="material-symbols-outlined" style="color:var(--c-primary)">location_city</span>
+    Lahore Smart City Watch
+  </a>
+  <div class="topnav-links">
+    <a href="index.html">Home</a>
+    <a href="citizen.html">Citizen Map</a>
+    <a href="emergency.html">Emergency</a>
+    <a href="districts.html">Districts</a>
+    <a href="insights.html" class="active">Insights</a>
+    <a href="about.html">About Us</a>
+  </div>
+  <div class="topnav-actions">
+    <button class="btn btn-primary btn-sm" onclick="window.location.href='index.html'">Sign In</button>
+  </div>
+</nav>
+
+<section class="insights-hero">
+  <div class="container text-center">
+    <h1 style="font-family:var(--ff-head);font-size:2.5rem;font-weight:800;margin-bottom:16px">Urban Intelligence</h1>
+    <p style="font-size:1.125rem;opacity:0.9">Data-driven insights for smarter city planning</p>
+  </div>
+</section>
+
+<section style="padding:60px 0">
+  <div class="container">
+    <div class="insight-card">
+      <h2 style="font-family:var(--ff-head);font-weight:700;margin-bottom:24px">Reports by Category</h2>
+      <div class="chart-container" id="categoryChart"></div>
+    </div>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div class="insight-card">
+        <h2 style="font-family:var(--ff-head);font-weight:700;margin-bottom:16px">Resolution Rate</h2>
+        <div style="text-align:center">
+          <div style="font-size:3rem;font-weight:800;color:var(--c-primary)" id="resolutionRate">0%</div>
+          <p style="color:var(--c-muted)">of reports resolved</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <h2 style="font-family:var(--ff-head);font-weight:700;margin-bottom:16px">Average Response Time</h2>
+        <div style="text-align:center">
+          <div style="font-size:3rem;font-weight:800;color:var(--c-primary)" id="avgResponseTime">0</div>
+          <p style="color:var(--c-muted)">days to resolution</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="insight-card">
+      <h2 style="font-family:var(--ff-head);font-weight:700;margin-bottom:24px">Weekly Trend</h2>
+      <div class="chart-container" id="weeklyChart"></div>
+    </div>
+    
+    <div class="insight-card">
+      <h2 style="font-family:var(--ff-head);font-weight:700;margin-bottom:24px">Priority Distribution</h2>
+      <div style="display:flex;gap:24px;justify-content:center">
+        <div style="text-align:center">
+          <div style="font-size:2rem;font-weight:700;color:var(--c-danger)" id="urgentCount">0</div>
+          <p style="color:var(--c-muted)">Urgent Reports</p>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:2rem;font-weight:700;color:var(--c-primary)" id="normalCount">0</div>
+          <p style="color:var(--c-muted)">Normal Reports</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer style="background:var(--c-primary-dark);color:white;padding:40px 0">
+  <div class="container text-center">
+    <p>© 2024 Lahore Smart City Watch — GIS-Based Urban Intelligence</p>
+  </div>
+</footer>
+
+<script src="/static/storage.js"></script>
+<script>
+function loadInsights() {
+  const reports = LSCW.getReports();
+  
+  // Category chart
+  const categories = {};
+  reports.forEach(r => { categories[r.category] = (categories[r.category] || 0) + 1; });
+  
+  const maxCount = Math.max(...Object.values(categories), 1);
+  const categoryChart = document.getElementById('categoryChart');
+  categoryChart.innerHTML = Object.entries(categories).map(([cat, count]) => `
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center">
+      <div style="height:200px;display:flex;align-items:flex-end;width:100%">
+        <div class="chart-bar" style="height:${(count / maxCount) * 180}px">
+          <span class="chart-bar-value">${count}</span>
+        </div>
+      </div>
+      <span class="chart-bar-label">${cat}</span>
+    </div>
+  `).join('');
+  
+  // Resolution rate
+  const resolved = reports.filter(r => r.status === 'resolved').length;
+  const rate = reports.length > 0 ? Math.round((resolved / reports.length) * 100) : 0;
+  document.getElementById('resolutionRate').textContent = rate + '%';
+  
+  // Average response time
+  const resolvedReports = reports.filter(r => r.status === 'resolved' && r.resolutionDate);
+  if (resolvedReports.length > 0) {
+    const totalDays = resolvedReports.reduce((sum, r) => {
+      const days = (new Date(r.resolutionDate) - new Date(r.createdAt)) / (1000 * 60 * 60 * 24);
+      return sum + days;
+    }, 0);
+    document.getElementById('avgResponseTime').textContent = Math.round(totalDays / resolvedReports.length);
+  }
+  
+  // Weekly trend (last 7 days)
+  const weekData = {};
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    weekData[date.toLocaleDateString('en-US', {weekday: 'short'})] = 0;
+  }
+  
+  reports.forEach(r => {
+    const reportDate = new Date(r.createdAt);
+    const daysAgo = Math.floor((Date.now() - reportDate) / (1000 * 60 * 60 * 24));
+    if (daysAgo < 7) {
+      const dayName = reportDate.toLocaleDateString('en-US', {weekday: 'short'});
+      weekData[dayName] = (weekData[dayName] || 0) + 1;
+    }
+  });
+  
+  const maxWeekly = Math.max(...Object.values(weekData), 1);
+  const weeklyChart = document.getElementById('weeklyChart');
+  weeklyChart.innerHTML = Object.entries(weekData).map(([day, count]) => `
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center">
+      <div style="height:150px;display:flex;align-items:flex-end;width:100%">
+        <div class="chart-bar" style="height:${(count / maxWeekly) * 130}px">
+          <span class="chart-bar-value">${count}</span>
+        </div>
+      </div>
+      <span class="chart-bar-label">${day}</span>
+    </div>
+  `).join('');
+  
+  // Priority counts
+  document.getElementById('urgentCount').textContent = reports.filter(r => r.priority === 'urgent').length;
+  document.getElementById('normalCount').textContent = reports.filter(r => r.priority === 'normal').length;
+}
+
+loadInsights();
+</script>
+</body>
+</html>

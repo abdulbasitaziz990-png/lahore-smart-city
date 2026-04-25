@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Districts — Lahore Smart City Watch</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+  <style>
+    .districts-hero {
+      background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%);
+      color: white;
+      padding: 120px 0 60px;
+      margin-top: 70px;
+    }
+    .district-card {
+      background: var(--c-white);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--c-surface-high);
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .district-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    .district-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .district-icon {
+      width: 48px; height: 48px;
+      border-radius: var(--radius-md);
+      background: rgba(0,63,135,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .district-name {
+      font-family: var(--ff-head);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .district-stats {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--c-surface-high);
+    }
+    .district-stat {
+      text-align: center;
+    }
+    .district-stat-value {
+      font-family: var(--ff-head);
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--c-primary);
+    }
+    .district-stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      color: var(--c-muted);
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="topnav-brand" href="index.html">
+    <span class="material-symbols-outlined" style="color:var(--c-primary)">location_city</span>
+    Lahore Smart City Watch
+  </a>
+  <div class="topnav-links">
+    <a href="index.html">Home</a>
+    <a href="citizen.html">Citizen Map</a>
+    <a href="emergency.html">Emergency</a>
+    <a href="districts.html" class="active">Districts</a>
+    <a href="insights.html">Insights</a>
+    <a href="about.html">About Us</a>
+  </div>
+  <div class="topnav-actions">
+    <button class="btn btn-primary btn-sm" onclick="window.location.href='index.html'">Sign In</button>
+  </div>
+</nav>
+
+<section class="districts-hero">
+  <div class="container text-center">
+    <h1 style="font-family:var(--ff-head);font-size:2.5rem;font-weight:800;margin-bottom:16px">Lahore Districts</h1>
+    <p style="font-size:1.125rem;opacity:0.9">Real-time civic monitoring across all administrative zones</p>
+  </div>
+</section>
+
+<section style="padding:60px 0">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px" id="districtsGrid"></div>
+  </div>
+</section>
+
+<footer style="background:var(--c-primary-dark);color:white;padding:40px 0">
+  <div class="container text-center">
+    <p>© 2024 Lahore Smart City Watch — GIS-Based Urban Intelligence</p>
+  </div>
+</footer>
+
+<script src="/static/storage.js"></script>
+<script>
+const districts = [
+  { name: 'Gulberg', lat: 31.5204, lng: 74.3587, areas: ['Gulberg II', 'Gulberg III', 'Main Boulevard', 'Liberty'] },
+  { name: 'Johar Town', lat: 31.4700, lng: 74.2750, areas: ['Block A', 'Block G', 'Block R', 'Expo Centre'] },
+  { name: 'DHA', lat: 31.4650, lng: 74.2680, areas: ['Phase 1', 'Phase 5', 'Phase 6', 'Phase 8'] },
+  { name: 'Model Town', lat: 31.4800, lng: 74.3100, areas: ['A Block', 'B Block', 'C Block', 'D Block'] },
+  { name: 'Iqbal Town', lat: 31.5100, lng: 74.2900, areas: ['Allama Iqbal Town', 'Township', 'Punjab Society'] },
+  { name: 'Cantt', lat: 31.5400, lng: 74.3500, areas: ['Saddar', 'Garrison', 'Askari', 'Fortress'] },
+  { name: 'Walled City', lat: 31.5800, lng: 74.3200, areas: ['Androon Lahore', 'Shahi Mohalla', 'Delhi Gate', 'Bhati Gate'] },
+  { name: 'Faisal Town', lat: 31.4900, lng: 74.3300, areas: ['Faisal Town', 'Punjab University', 'Canal Road'] },
+  { name: 'Garden Town', lat: 31.5100, lng: 74.3100, areas: ['Garden Town', 'Ferozepur Road', 'Kalma Chowk'] }
+];
+
+function getDistrictStats(districtName) {
+  const reports = LSCW.getReports();
+  const districtReports = reports.filter(r => {
+    const address = (r.address || '').toLowerCase();
+    return address.includes(districtName.toLowerCase());
+  });
+  
+  return {
+    total: districtReports.length,
+    pending: districtReports.filter(r => r.status === 'pending').length,
+    resolved: districtReports.filter(r => r.status === 'resolved').length
+  };
+}
+
+function renderDistricts() {
+  const grid = document.getElementById('districtsGrid');
+  
+  grid.innerHTML = districts.map(d => {
+    const stats = getDistrictStats(d.name);
+    return `
+      <div class="district-card" onclick="window.location.href='citizen.html'">
+        <div class="district-header">
+          <div class="district-icon">
+            <span class="material-symbols-outlined" style="color:var(--c-primary)">location_city</span>
+          </div>
+          <div>
+            <div class="district-name">${d.name}</div>
+            <div style="font-size:0.75rem;color:var(--c-muted)">${d.areas.length} zones monitored</div>
+          </div>
+        </div>
+        <div style="font-size:0.8rem;color:var(--c-muted)">
+          ${d.areas.slice(0, 3).join(' • ')}${d.areas.length > 3 ? ' • ...' : ''}
+        </div>
+        <div class="district-stats">
+          <div class="district-stat">
+            <div class="district-stat-value">${stats.total}</div>
+            <div class="district-stat-label">Reports</div>
+          </div>
+          <div class="district-stat">
+            <div class="district-stat-value" style="color:var(--c-warn)">${stats.pending}</div>
+            <div class="district-stat-label">Pending</div>
+          </div>
+          <div class="district-stat">
+            <div class="district-stat-value" style="color:var(--c-success)">${stats.resolved}</div>
+            <div class="district-stat-label">Resolved</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+renderDistricts();
+</script>
+</body>
+</html>

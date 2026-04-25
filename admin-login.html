@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — Lahore Smart City Watch</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+  <style>
+    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f8fafc 100%); position: relative; overflow: hidden; }
+    body::before { content: ''; position: absolute; top: -50%; right: -20%; width: 800px; height: 800px; background: radial-gradient(circle, rgba(0,63,135,0.08) 0%, transparent 70%); border-radius: 50%; }
+    .login-container { width: 100%; max-width: 420px; padding: 20px; position: relative; z-index: 1; }
+    .login-card { background: white; border-radius: 24px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
+    .login-header { text-align: center; margin-bottom: 32px; }
+    .login-header .material-symbols-outlined { font-size: 48px; color: #003f87; margin-bottom: 16px; }
+    .login-header h1 { font-weight: 700; font-size: 1.5rem; color: #003f87; margin-bottom: 8px; }
+    .login-header p { color: #64748b; font-size: 0.875rem; }
+    .security-notice { background: #fef3c7; border: 1px solid #d97706; border-radius: 10px; padding: 12px; font-size: 0.75rem; color: #d97706; margin-top: 20px; display: flex; align-items: center; gap: 8px; }
+    .back-link { text-align: center; margin-top: 20px; font-size: 0.75rem; color: #64748b; }
+    .back-link a { color: #003f87; font-weight: 500; }
+  </style>
+</head>
+<body>
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <span class="material-symbols-outlined icon-filled">admin_panel_settings</span>
+      <h1>Admin Portal</h1>
+      <p>Restricted Access — Authorized Personnel Only</p>
+    </div>
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div style="margin-bottom:20px"><label style="display:block;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:#475569;margin-bottom:6px">Username</label><input type="text" id="username" style="width:100%;padding:12px;border:1.5px solid #cbd5e1;border-radius:10px" placeholder="Enter admin username" required autocomplete="off"></div>
+      <div style="margin-bottom:20px"><label style="display:block;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:#475569;margin-bottom:6px">Password</label><input type="password" id="password" style="width:100%;padding:12px;border:1.5px solid #cbd5e1;border-radius:10px" placeholder="Enter password" required></div>
+      <button type="submit" style="width:100%;padding:14px;background:#003f87;color:white;border:none;border-radius:10px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span class="material-symbols-outlined">lock</span>Secure Sign In</button>
+    </form>
+    <div class="security-notice"><span class="material-symbols-outlined">security</span>This portal is monitored 24/7. All access attempts are logged and audited.</div>
+    <div class="back-link"><a href="/">← Return to Public Portal</a></div>
+  </div>
+</div>
+<div id="toast-container"></div>
+<script src="/static/storage.js"></script>
+<script>
+const session = LSCW.getSession();
+if (session && session.role === 'admin') { window.location.href = '/admin-page.html'; }
+let attemptCount = 0;
+async function handleLogin(e) {
+  e.preventDefault();
+  if (LSCW.isRateLimited('admin_login', 5)) { showToast('Too many failed attempts. Please try again in 15 minutes.', 'error'); return; }
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const result = await LSCW.loginAdmin(username, password);
+  if (result.ok) { showToast('Login successful!', 'success'); setTimeout(() => window.location.href = '/admin-page.html', 800); }
+  else { LSCW.recordAttempt('admin_login'); attemptCount++; const remaining = 5 - attemptCount; showToast(`Invalid credentials. ${remaining > 0 ? remaining + ' attempts remaining' : 'Account locked'}`, 'error'); }
+}
+function showToast(msg, type) {
+  const tc = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.style.cssText = 'padding:12px 20px;border-radius:10px;margin-bottom:8px;color:white;font-weight:500';
+  t.style.background = type === 'success' ? '#059669' : type === 'error' ? '#dc2626' : '#1d6fdc';
+  t.textContent = msg; tc.appendChild(t); setTimeout(() => t.remove(), 4000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Lahore Smart City Watch</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+  <style>
+    .admin-header { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 64px; }
+    .admin-header-brand { font-family: var(--ff-head); font-weight: 700; font-size: 1.1rem; color: var(--c-primary); display: flex; align-items: center; gap: 8px; }
+    .admin-header-right { display: flex; align-items: center; gap: 20px; }
+    #adminMap { height: 400px; border-radius: 16px; border: 1px solid var(--c-border); margin-bottom: 24px; }
+    .report-photo { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; flex-shrink: 0; cursor: pointer; }
+    .report-photo-placeholder { width: 80px; height: 80px; background: #f1f5f9; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .notification-item { padding: 14px 16px; border-bottom: 1px solid var(--c-border); cursor: pointer; }
+    .notification-item.unread { background: var(--c-accent-light); border-left: 3px solid var(--c-primary); }
+  </style>
+</head>
+<body>
+
+<header class="admin-header">
+  <div class="admin-header-brand"><span class="material-symbols-outlined">admin_panel_settings</span>Lahore Smart City Watch — Admin</div>
+  <div class="admin-header-right">
+    <div class="search-bar"><input type="text" placeholder="Search..." id="searchInput"><button id="searchBtn"><span class="material-symbols-outlined">search</span></button></div>
+    <div class="notification-badge"><button class="btn-icon" id="notificationBtn"><span class="material-symbols-outlined">notifications</span></button><span class="notification-count" id="notificationCount">0</span></div>
+    <div><span>Welcome, <strong id="adminName">Admin</strong></span><button class="btn btn-outline btn-sm" onclick="logout()">Logout</button></div>
+  </div>
+</header>
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <nav>
+      <button class="admin-nav-item active" data-panel="overview"><span class="material-symbols-outlined">dashboard</span>Overview</button>
+      <button class="admin-nav-item" data-panel="livefeed"><span class="material-symbols-outlined">map</span>Live Feed Map</button>
+      <button class="admin-nav-item" data-panel="reports"><span class="material-symbols-outlined">assignment</span>All Reports</button>
+      <button class="admin-nav-item" data-panel="zones"><span class="material-symbols-outlined">location_city</span>Lahore Zones</button>
+      <button class="admin-nav-item" data-panel="priority"><span class="material-symbols-outlined">trending_up</span>Priority Ranking</button>
+      <button class="admin-nav-item" data-panel="support"><span class="material-symbols-outlined">support_agent</span>Support Tickets</button>
+      <button class="admin-nav-item" data-panel="analytics"><span class="material-symbols-outlined">analytics</span>Analytics</button>
+      <button class="admin-nav-item" data-panel="users"><span class="material-symbols-outlined">group</span>Users</button>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+    <div id="panel-overview">
+      <h1>Incident Management</h1>
+      <p style="color:var(--c-text-secondary);margin-bottom:24px">Real-time civic reporting across Lahore Zones</p>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Total</div></div>
+        <div class="stat-card"><div class="stat-value" id="statPending" style="color:var(--c-warning)">0</div><div class="stat-label">Pending</div></div>
+        <div class="stat-card"><div class="stat-value" id="statProgress" style="color:var(--c-info)">0</div><div class="stat-label">In Progress</div></div>
+        <div class="stat-card"><div class="stat-value" id="statResolved" style="color:var(--c-success)">0</div><div class="stat-label">Resolved</div></div>
+      </div>
+      <div class="filter-tabs"><button class="filter-tab active" data-filter="all">All</button><button class="filter-tab" data-filter="pending">Pending</button><button class="filter-tab" data-filter="in-progress">In Progress</button><button class="filter-tab" data-filter="resolved">Resolved</button></div>
+      <div id="reportsList"></div>
+    </div>
+    <div id="panel-livefeed" style="display:none"><h1>Live Feed Map</h1><div id="adminMap"></div><div id="liveFeedStats"></div></div>
+    <div id="panel-reports" style="display:none"><h1>All Reports</h1><div id="allReportsList"></div></div>
+    <div id="panel-zones" style="display:none"><h1>Lahore Zones</h1><div class="zone-grid" id="zonesGrid"></div></div>
+    <div id="panel-priority" style="display:none"><h1>📊 Priority Ranking</h1><div class="card"><div class="card-header">Top Priority Issues</div><div class="card-body" id="priorityList">Loading...</div></div></div>
+    <div id="panel-support" style="display:none"><h1>Support Tickets</h1><div class="filter-tabs" style="margin-bottom:16px"><button class="filter-tab active" data-ticket-filter="all">All</button><button class="filter-tab" data-ticket-filter="open">Open</button><button class="filter-tab" data-ticket-filter="replied">Replied</button><button class="filter-tab" data-ticket-filter="closed">Closed</button></div><div id="ticketsList"></div></div>
+    <div id="panel-analytics" style="display:none">
+      <h1>Analytics & Insights</h1>
+      <div class="stats-grid" style="margin-bottom:24px">
+        <div class="stat-card"><div class="stat-value" id="analyticsTotal">0</div><div class="stat-label">Total Reports</div></div>
+        <div class="stat-card"><div class="stat-value" id="analyticsUrgent">0</div><div class="stat-label">Urgent</div></div>
+        <div class="stat-card"><div class="stat-value" id="analyticsAvgTime">0</div><div class="stat-label">Avg Days</div></div>
+        <div class="stat-card"><div class="stat-value" id="analyticsRate">0%</div><div class="stat-label">Resolution Rate</div></div>
+      </div>
+      <div class="card" style="margin-bottom:24px"><div class="card-header">Reports by Zone</div><div class="card-body" id="zoneChart"></div></div>
+      <div class="card"><div class="card-header">Reports by Category</div><div class="card-body" id="categoryChart"></div></div>
+    </div>
+    <div id="panel-users" style="display:none"><h1>Users</h1><div class="table-container"><table class="table"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Reports</th></tr></thead><tbody id="usersTableBody"></tbody></table></div></div>
+  </main>
+</div>
+
+<!-- Update Status Modal -->
+<div class="modal-overlay" id="updateStatusModal">
+  <div class="modal" style="max-width:550px">
+    <div class="modal-header"><div class="modal-title">Update Report Status</div><button class="modal-close" onclick="closeModal('updateStatusModal')"><span class="material-symbols-outlined">close</span></button></div>
+    <div class="modal-body">
+      <form id="updateStatusForm" onsubmit="submitStatusUpdate(event)">
+        <input type="hidden" id="updateReportId">
+        <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="updateStatus" required><option value="pending">Pending</option><option value="in-progress">In Progress</option><option value="resolved">Resolved</option></select></div>
+        <div class="form-group"><label class="form-label">Description / Notes for Citizen</label><textarea class="form-textarea" id="updateNotes" rows="4" placeholder="Add detailed notes..."></textarea></div>
+        <div class="form-group"><label class="form-label">Estimated Resolution Date</label><input type="date" class="form-input" id="updateEstimate"></div>
+        <div class="form-group"><label class="form-label">Upload Progress Photo</label><div style="border:2px dashed var(--c-border);border-radius:12px;padding:24px;text-align:center;cursor:pointer" onclick="document.getElementById('updatePhoto').click()"><span class="material-symbols-outlined" style="font-size:32px;color:#94a3b8">cloud_upload</span><p>Click to upload progress photo</p><input type="file" id="updatePhoto" accept="image/*" style="display:none"><img id="updatePhotoPreview" style="display:none;max-width:100%;max-height:150px;margin-top:12px;border-radius:8px"></div></div>
+        <button type="submit" class="btn btn-primary w-full btn-lg">Update Status</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Notifications Modal -->
+<div class="modal-overlay" id="notificationsModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Notifications</div><button class="modal-close" onclick="closeModal('notificationsModal')"><span class="material-symbols-outlined">close</span></button></div>
+    <div class="modal-body"><div id="notificationList"><p class="text-center c-muted">Loading...</p></div></div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/static/storage.js"></script>
+<script>
+const session = LSCW.getSession();
+if (!session || session.role !== 'admin') { window.location.href = '/admin-login.html'; }
+document.getElementById('adminName').textContent = session.name;
+
+let currentFilter = 'all';
+let currentTicketFilter = 'all';
+let adminMap = null;
+let adminMarkerLayer = null;
+let updatePhotoBase64 = null;
+
+loadStats(); loadReports(); updateNotificationBadge();
+
+document.getElementById('updatePhoto').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) { const r = new FileReader(); r.onload = ev => { updatePhotoBase64 = ev.target.result; document.getElementById('updatePhotoPreview').src = ev.target.result; document.getElementById('updatePhotoPreview').style.display = 'block'; }; r.readAsDataURL(file); }
+});
+
+document.getElementById('notificationBtn').addEventListener('click', () => { loadAdminNotifications(); openModal('notificationsModal'); });
+
+document.querySelectorAll('[data-panel]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-panel]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('[id^="panel-"]').forEach(p => p.style.display = 'none');
+    document.getElementById('panel-' + btn.dataset.panel).style.display = 'block';
+    if (btn.dataset.panel === 'livefeed') initAdminMap();
+    if (btn.dataset.panel === 'reports') loadAllReports();
+    if (btn.dataset.panel === 'zones') loadZones();
+    if (btn.dataset.panel === 'priority') loadPriority();
+    if (btn.dataset.panel === 'support') loadAdminTickets();
+    if (btn.dataset.panel === 'analytics') loadAnalytics();
+    if (btn.dataset.panel === 'users') loadUsers();
+  });
+});
+
+document.querySelectorAll('[data-filter]').forEach(tab => {
+  tab.addEventListener('click', () => { document.querySelectorAll('[data-filter]').forEach(t => t.classList.remove('active')); tab.classList.add('active'); currentFilter = tab.dataset.filter; loadReports(); });
+});
+
+document.querySelectorAll('[data-ticket-filter]').forEach(tab => {
+  tab.addEventListener('click', () => { document.querySelectorAll('[data-ticket-filter]').forEach(t => t.classList.remove('active')); tab.classList.add('active'); currentTicketFilter = tab.dataset.ticketFilter; loadAdminTickets(); });
+});
+
+function updateNotificationBadge() { const c = LSCW.getUnreadCount('admin-001'); const b = document.getElementById('notificationCount'); b.textContent = c; b.style.display = c > 0 ? 'flex' : 'none'; }
+
+function loadAdminNotifications() {
+  const notifications = LSCW.getAllNotifications('admin-001');
+  const container = document.getElementById('notificationList');
+  if (notifications.length === 0) { container.innerHTML = '<p class="text-center c-muted">No notifications</p>'; return; }
+  container.innerHTML = notifications.map(n => `<div class="notification-item ${n.read?'':'unread'}"><div style="font-weight:600">${n.title}</div><div style="font-size:0.8rem;color:var(--c-text-secondary)">${n.message}</div><div style="font-size:0.7rem;color:var(--c-text-muted)">${LSCW.timeAgo(n.createdAt)}</div></div>`).join('');
+  LSCW.markAllNotificationsRead('admin-001'); updateNotificationBadge();
+}
+
+function loadStats() {
+  const reports = LSCW.getReports();
+  document.getElementById('statTotal').textContent = reports.length;
+  document.getElementById('statPending').textContent = reports.filter(r => r.status === 'pending').length;
+  document.getElementById('statProgress').textContent = reports.filter(r => r.status === 'in-progress').length;
+  document.getElementById('statResolved').textContent = reports.filter(r => r.status === 'resolved').length;
+}
+
+function loadReports(searchTerm = '') {
+  let reports = LSCW.getReports();
+  if (currentFilter !== 'all') reports = reports.filter(r => r.status === currentFilter);
+  if (searchTerm) { const term = searchTerm.toLowerCase(); reports = reports.filter(r => (r.reportId && r.reportId.toLowerCase().includes(term)) || r.category.toLowerCase().includes(term)); }
+  reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  
+  document.getElementById('reportsList').innerHTML = reports.map(r => {
+    const sb = { pending: 'badge-pending', 'in-progress': 'badge-progress', resolved: 'badge-resolved' };
+    const userPhoto = r.photo ? `<img src="${r.photo}" class="report-photo" onerror="this.parentElement.innerHTML='<div class=report-photo-placeholder>📷</div>'">` : `<div class="report-photo-placeholder">📷</div>`;
+    const adminPhoto = r.adminPhoto ? `<img src="${r.adminPhoto}" style="width:50px;height:50px;object-fit:cover;border-radius:6px;margin-left:8px" title="Progress photo">` : '';
+    return `<div class="report-card"><div class="report-card-header">${userPhoto}<div class="report-card-content"><div class="report-card-title"><span class="report-id">${r.reportId||'N/A'}</span><span class="badge ${sb[r.status]}">${r.status}</span>${r.priority==='urgent'?'<span class="badge badge-danger">Urgent</span>':''}</div><div class="report-card-title">${LSCW.sanitise(r.category)} - ${LSCW.sanitise(r.zone||'Lahore')}</div><div class="report-card-desc">${LSCW.sanitise(r.description)}</div>${r.adminNotes?`<div style="background:#eff6ff;padding:8px;border-radius:8px;margin:8px 0;font-size:0.78rem"><strong>📝 Admin:</strong> ${LSCW.sanitise(r.adminNotes)} ${adminPhoto}</div>`:''}<div class="report-card-meta"><span>👤 ${LSCW.sanitise(r.reportedBy)}</span><span>📞 ${LSCW.sanitise(r.reporterPhone||'N/A')}</span><span>🕐 ${LSCW.timeAgo(r.createdAt)}</span></div></div></div><div class="report-card-actions"><button class="btn btn-outline btn-sm" onclick="viewOnMap(${r.lat},${r.lng})">Map</button><button class="btn btn-primary btn-sm" onclick="openUpdateModal('${r.id}')">Update</button></div></div>`;
+  }).join('');
+  window.viewOnMap = (lat, lng) => { document.querySelector('[data-panel="livefeed"]').click(); setTimeout(() => { if (adminMap) adminMap.setView([lat, lng], 16); }, 200); };
+  window.openUpdateModal = (id) => { document.getElementById('updateReportId').value = id; openModal('updateStatusModal'); };
+}
+
+function loadAllReports() { const reports = LSCW.getReports().sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)); document.getElementById('allReportsList').innerHTML = reports.map(r => `<div class="report-card"><div class="report-card-content"><div class="report-card-title">${r.reportId} - ${LSCW.sanitise(r.category)}</div><div class="report-card-desc">${LSCW.sanitise(r.description)}</div></div></div>`).join(''); }
+
+function submitStatusUpdate(e) {
+  e.preventDefault();
+  LSCW.updateReportStatus(document.getElementById('updateReportId').value, document.getElementById('updateStatus').value, { notes: document.getElementById('updateNotes').value, photo: updatePhotoBase64, estimatedResolution: document.getElementById('updateEstimate').value || null });
+  closeModal('updateStatusModal'); showToast('Updated!', 'success'); loadStats(); loadReports(); updateNotificationBadge();
+  updatePhotoBase64 = null; document.getElementById('updatePhotoPreview').style.display = 'none'; document.getElementById('updateStatusForm').reset();
+}
+
+function initAdminMap() {
+  if (adminMap) { adminMap.invalidateSize(); loadAdminMarkers(); return; }
+  adminMap = L.map('adminMap', { zoomControl: true }).setView([31.5204, 74.3587], 12);
+  // CartoDB tiles - Free, no block
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CARTO', subdomains: 'abcd', maxZoom: 19 }).addTo(adminMap);
+  adminMarkerLayer = L.layerGroup().addTo(adminMap); loadAdminMarkers();
+}
+
+function loadAdminMarkers() {
+  if (!adminMarkerLayer) return; adminMarkerLayer.clearLayers();
+  LSCW.getReports().forEach(r => { const color = r.status === 'resolved' ? '#059669' : r.status === 'in-progress' ? '#2563eb' : '#d97706'; L.marker([r.lat, r.lng], { icon: L.divIcon({ html: `<div style="width:30px;height:30px;border-radius:50%;background:${color};border:3px solid white;display:flex;align-items:center;justify-content:center;color:white;font-weight:700">${(r.reportId||'RPT').slice(-4)}</div>`, iconSize: [30,30], iconAnchor: [15,15] }) }).addTo(adminMarkerLayer).bindPopup(`<strong>${r.reportId}</strong><br>${r.category}<br>${r.status}`); });
+}
+
+function loadZones() { document.getElementById('zonesGrid').innerHTML = LSCW.getZones().map(z => { const reports = LSCW.getReportsByZone(z.name); return `<div class="zone-card"><div class="zone-header"><div class="zone-icon"><span class="material-symbols-outlined">location_city</span></div><div class="zone-name">${z.name}</div></div><div class="zone-stats"><div class="zone-stat"><div class="zone-stat-value">${reports.length}</div><div class="zone-stat-label">Total</div></div><div class="zone-stat"><div class="zone-stat-value" style="color:var(--c-warning)">${reports.filter(r=>r.status==='pending').length}</div><div class="zone-stat-label">Pending</div></div><div class="zone-stat"><div class="zone-stat-value" style="color:var(--c-success)">${reports.filter(r=>r.status==='resolved').length}</div><div class="zone-stat-label">Resolved</div></div></div></div>`; }).join(''); }
+
+async function loadPriority() {
+  const container = document.getElementById('priorityList');
+  try {
+    const token = LSCW.getSession()?.accessToken;
+    const res = await fetch('http://127.0.0.1:8000/api/reports/priority/', { headers: { 'Authorization': token ? `Bearer ${token}` : '' } });
+    const data = await res.json();
+    if (!data || data.length === 0) { container.innerHTML = '<p class="text-center c-muted" style="padding:32px">No duplicate reports yet.</p>'; return; }
+    const maxCount = Math.max(...data.map(d => d.count));
+    container.innerHTML = data.map((item, index) => `<div style="display:flex;align-items:center;gap:16px;padding:16px;border-bottom:1px solid var(--c-border)"><div style="font-size:1.8rem;font-weight:800;color:var(--c-primary);min-width:35px">#${index+1}</div><div style="flex:1"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><strong>${item.category}</strong></div><div style="font-size:0.78rem;color:var(--c-text-secondary);margin-bottom:6px">📍 ${item.zone_name||'Lahore'}</div><div style="display:flex;align-items:center;gap:10px"><div style="flex:1;height:10px;background:var(--c-surface-alt);border-radius:5px;overflow:hidden"><div style="width:${(item.count/maxCount)*100}%;height:100%;background:#2563eb;border-radius:5px"></div></div><span style="font-weight:700">${item.count} reports</span></div></div></div>`).join('');
+  } catch(e) { container.innerHTML = '<p class="text-center c-muted">Error loading data</p>'; }
+}
+
+function loadAdminTickets() {
+  let tickets = LSCW.getAllTickets();
+  if (currentTicketFilter !== 'all') tickets = tickets.filter(t => t.status === currentTicketFilter);
+  const container = document.getElementById('ticketsList');
+  if (tickets.length === 0) { container.innerHTML = '<p class="text-center c-muted" style="padding:32px">No support tickets yet</p>'; return; }
+  container.innerHTML = tickets.map(t => `<div class="report-card"><div class="report-card-header"><div class="report-card-content"><div class="report-card-title"><span class="report-id">${t.ticketNumber}</span><span class="badge badge-${t.status==='open'?'warning':t.status==='replied'?'success':'info'}">${t.status}</span></div><div class="report-card-title">${LSCW.sanitise(t.subject)}</div><div class="report-card-desc">${t.messages[0]?.message?.substring(0,100)||''}</div><div class="report-card-meta"><span>👤 ${LSCW.sanitise(t.userName)}</span><span>💬 ${t.messages.length} msgs</span></div></div></div></div>`).join('');
+}
+
+function loadAnalytics() {
+  const reports = LSCW.getReports();
+  const resolved = reports.filter(r => r.status === 'resolved');
+  document.getElementById('analyticsTotal').textContent = reports.length;
+  document.getElementById('analyticsUrgent').textContent = reports.filter(r => r.priority === 'urgent').length;
+  document.getElementById('analyticsRate').textContent = reports.length > 0 ? Math.round((resolved.length / reports.length) * 100) + '%' : '0%';
+  const zones = LSCW.getZones();
+  const maxZ = Math.max(...zones.map(z => LSCW.getReportsByZone(z.name).length), 1);
+  document.getElementById('zoneChart').innerHTML = zones.map(z => { const c = LSCW.getReportsByZone(z.name).length; return `<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><div style="width:100px;font-weight:500">${z.name}</div><div style="flex:1;height:20px;background:#f1f5f9;border-radius:10px;overflow:hidden"><div style="width:${(c/maxZ)*100}%;height:100%;background:var(--c-primary)"></div></div><div style="width:30px;text-align:right">${c}</div></div>`; }).join('');
+  const cats = {}; reports.forEach(r => { cats[r.category] = (cats[r.category] || 0) + 1; });
+  const maxC = Math.max(...Object.values(cats), 1);
+  document.getElementById('categoryChart').innerHTML = Object.entries(cats).map(([cat, c]) => `<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><div style="width:100px;font-weight:500">${cat}</div><div style="flex:1;height:20px;background:#f1f5f9;border-radius:10px;overflow:hidden"><div style="width:${(c/maxC)*100}%;height:100%;background:var(--c-success)"></div></div><div style="width:30px;text-align:right">${c}</div></div>`).join('');
+}
+
+function loadUsers() {
+  const users = JSON.parse(localStorage.getItem('lscw_users') || '[]');
+  document.getElementById('usersTableBody').innerHTML = users.map(u => `<tr><td>${LSCW.sanitise(u.name)}</td><td>${LSCW.sanitise(u.email)}</td><td>${u.phone||'N/A'}</td><td>${(LSCW.getReportsByUser?LSCW.getReportsByUser(u.id):[]).length}</td></tr>`).join('');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+function showToast(msg, type) { const tc = document.getElementById('toast-container'); const t = document.createElement('div'); t.className = `toast toast-${type}`; t.innerHTML = `<span class="material-symbols-outlined">${type==='success'?'check_circle':'info'}</span> ${msg}`; tc.appendChild(t); setTimeout(() => t.remove(), 3500); }
+function logout() { LSCW.clearSession(); window.location.href = '/admin-login.html'; }
+document.querySelectorAll('.modal-overlay').forEach(o => { o.addEventListener('click', (e) => { if (e.target === o) o.classList.remove('active'); }); });
+setInterval(updateNotificationBadge, 30000);
+</script>
+</body>
+</html>

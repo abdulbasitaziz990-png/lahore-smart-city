@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergency Report — Lahore Smart City Watch</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
+  <style>
+    body { min-height: 100vh; background: #f8fafc; }
+    .map-placeholder { height: 320px; background: linear-gradient(rgba(0,63,135,0.05), rgba(0,63,135,0.1)), url('https://tile.openstreetmap.org/13/5953/3620.png') center/cover; position: relative; overflow: hidden; }
+    .map-pin { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .map-pin-dot { width: 20px; height: 20px; border-radius: 50%; background: #dc2626; border: 3px solid white; box-shadow: 0 2px 16px rgba(220,38,38,0.4); animation: pinPulse 2s ease-in-out infinite; }
+    @keyframes pinPulse { 0%,100% { box-shadow: 0 2px 16px rgba(220,38,38,0.4), 0 0 0 0 rgba(220,38,38,0.3); } 50% { box-shadow: 0 2px 16px rgba(220,38,38,0.4), 0 0 0 20px rgba(220,38,38,0); } }
+    .map-location-badge { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 50px; font-size: 0.8rem; font-weight: 500; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .emergency-content { max-width: 680px; margin: 0 auto; padding: 32px 24px 120px; }
+    .page-title { font-weight: 800; font-size: 2rem; margin-bottom: 8px; }
+    .page-sub { font-size: 1rem; color: #475569; margin-bottom: 32px; }
+    .emergency-numbers { background: #fee2e2; border: 1px solid #dc2626; border-radius: 16px; padding: 24px; margin-bottom: 32px; }
+    .emergency-numbers-title { font-weight: 700; font-size: 0.9rem; color: #dc2626; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .emergency-num-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(220,38,38,0.1); font-size: 0.9rem; }
+    .emergency-num-row:last-child { border-bottom: none; }
+    .emergency-num-row a { font-family: monospace; font-weight: 700; color: #dc2626; font-size: 1.1rem; }
+    .hazard-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+    .hazard-card { display: flex; align-items: center; gap: 16px; padding: 18px 20px; background: white; border: 2px solid transparent; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); cursor: pointer; transition: all 0.2s; text-align: left; }
+    .hazard-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateX(4px); }
+    .hazard-card.selected { border-color: #dc2626; background: #fee2e2; }
+    .hazard-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .hazard-info { flex: 1; }
+    .hazard-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+    .hazard-sub { font-size: 0.8rem; color: #475569; }
+    .hazard-check { width: 24px; height: 24px; border-radius: 50%; background: #dc2626; display: flex; align-items: center; justify-content: center; color: white; display: none; }
+    .hazard-card.selected .hazard-check { display: flex; }
+    .emergency-bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 16px 20px 28px; background: white; border-top: 1px solid #e2e8f0; z-index: 80; }
+    .send-alert-btn { width: 100%; max-width: 600px; margin: 0 auto; padding: 18px; background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border: none; border-radius: 50px; font-weight: 700; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 20px rgba(220,38,38,0.3); }
+    .confirm-overlay { position: fixed; inset: 0; z-index: 200; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; display: none; }
+    .confirm-icon { width: 120px; height: 120px; border-radius: 50%; background: #d1fae5; border: 3px solid #059669; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+    .confirm-icon .material-symbols-outlined { font-size: 56px; color: #059669; }
+    .confirm-title { font-weight: 800; font-size: 2rem; margin-bottom: 12px; }
+    .confirm-sub { color: #475569; font-size: 1rem; margin-bottom: 32px; }
+    .dispatch-card { width: 100%; max-width: 380px; background: #f1f5f9; border-radius: 16px; padding: 24px; margin-bottom: 28px; }
+    .dispatch-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 12px; }
+    .dispatch-label { color: #64748b; }
+    .dispatch-value { font-weight: 700; font-family: monospace; }
+    .eta-label { font-weight: 800; font-size: 1.8rem; color: #003f87; text-align: center; }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="topnav-brand" href="/"><span class="material-symbols-outlined">location_city</span>Lahore Smart City Watch</a>
+  <div class="topnav-links">
+    <a href="/">Home</a>
+    <a href="/citizen.html">My Reports</a>
+    <a href="/emergency.html" class="active">Emergency</a>
+  </div>
+  <div class="topnav-actions">
+    <button class="btn btn-outline btn-sm" id="navLogoutBtn" style="display:none">Logout</button>
+    <button class="btn btn-primary btn-sm" id="navLoginBtn">Sign In</button>
+  </div>
+</nav>
+
+<div class="map-placeholder" style="margin-top:64px">
+  <div class="map-pin"><div class="map-pin-dot"></div></div>
+  <div class="map-location-badge" id="locationBadge"><span class="material-symbols-outlined">my_location</span><span id="locationText">Detecting location...</span></div>
+</div>
+
+<div class="emergency-content">
+  <h1 class="page-title">Emergency Report</h1>
+  <p class="page-sub">Select the hazard type to alert authorities immediately.</p>
+  
+  <div class="emergency-numbers">
+    <div class="emergency-numbers-title"><span class="material-symbols-outlined">emergency</span>Quick Emergency Numbers</div>
+    <div class="emergency-num-row"><span>🔴 Fire Brigade</span><a href="tel:16">16</a></div>
+    <div class="emergency-num-row"><span>🔵 Police</span><a href="tel:15">15</a></div>
+    <div class="emergency-num-row"><span>🟡 Rescue Punjab</span><a href="tel:1122">1122</a></div>
+    <div class="emergency-num-row"><span>💧 WASA Emergency</span><a href="tel:042-99332010">042-99332010</a></div>
+    <div class="emergency-num-row"><span>⚡ LESCO Power</span><a href="tel:118">118</a></div>
+    <div class="emergency-num-row"><span>🔥 SNGPL Gas Leak</span><a href="tel:119">119</a></div>
+  </div>
+  
+  <div class="hazard-list" id="hazardList">
+    <button class="hazard-card" data-hazard="Hazardous Live Wire" onclick="selectHazard(this)"><div class="hazard-icon" style="background:rgba(220,38,38,0.1)"><span class="material-symbols-outlined" style="color:#dc2626">bolt</span></div><div class="hazard-info"><div class="hazard-title">Hazardous Live Wire</div><div class="hazard-sub">Exposed or fallen electrical cables</div></div><div class="hazard-check"><span class="material-symbols-outlined">check</span></div></button>
+    <button class="hazard-card" data-hazard="Open Manhole" onclick="selectHazard(this)"><div class="hazard-icon" style="background:rgba(0,63,135,0.1)"><span class="material-symbols-outlined" style="color:#003f87">dangerous</span></div><div class="hazard-info"><div class="hazard-title">Open Manhole</div><div class="hazard-sub">Missing cover or damaged drainage</div></div><div class="hazard-check"><span class="material-symbols-outlined">check</span></div></button>
+    <button class="hazard-card" data-hazard="Gas Leak" onclick="selectHazard(this)"><div class="hazard-icon" style="background:rgba(71,85,105,0.1)"><span class="material-symbols-outlined" style="color:#475569">gas_meter</span></div><div class="hazard-info"><div class="hazard-title">Gas Leak</div><div class="hazard-sub">Smell of gas or visible pipeline rupture</div></div><div class="hazard-check"><span class="material-symbols-outlined">check</span></div></button>
+    <button class="hazard-card" data-hazard="Flood / Waterlogging" onclick="selectHazard(this)"><div class="hazard-icon" style="background:rgba(2,132,199,0.1)"><span class="material-symbols-outlined" style="color:#0284c7">flood</span></div><div class="hazard-info"><div class="hazard-title">Flood / Waterlogging</div><div class="hazard-sub">Road or area flooded, blocking passage</div></div><div class="hazard-check"><span class="material-symbols-outlined">check</span></div></button>
+    <button class="hazard-card" data-hazard="Structure Collapse" onclick="selectHazard(this)"><div class="hazard-icon" style="background:rgba(180,83,9,0.1)"><span class="material-symbols-outlined" style="color:#b45309">domain_disabled</span></div><div class="hazard-info"><div class="hazard-title">Structure Collapse</div><div class="hazard-sub">Building, wall, or bridge collapse</div></div><div class="hazard-check"><span class="material-symbols-outlined">check</span></div></button>
+  </div>
+  
+  <div class="form-group"><label class="form-label">Additional Details (Optional)</label><textarea class="form-textarea" id="extraDetail" rows="2" placeholder="Describe the severity..."></textarea></div>
+</div>
+
+<div class="emergency-bottom-bar"><button class="send-alert-btn" id="sendBtn" onclick="sendAlert()"><span class="material-symbols-outlined">emergency</span>Send Emergency Alert<span class="material-symbols-outlined">send</span></button></div>
+
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-icon"><span class="material-symbols-outlined">check_circle</span></div>
+  <div class="confirm-title">Alert Sent!</div>
+  <div class="confirm-sub">Emergency services have been notified.<br/>Help is on the way.</div>
+  <div class="dispatch-card">
+    <div class="dispatch-row"><span class="dispatch-label">Incident Type</span><span class="dispatch-value" id="confirmType">—</span></div>
+    <div class="dispatch-row"><span class="dispatch-label">Reference ID</span><span class="dispatch-value" id="confirmRef" style="font-size:0.8rem">—</span></div>
+    <div style="background:white;border-radius:12px;padding:16px;margin-top:16px"><div style="font-size:0.75rem;color:#64748b;margin-bottom:4px">Estimated Arrival</div><div class="eta-label">4 – 7 minutes</div></div>
+  </div>
+  <div style="display:flex;gap:12px"><a href="/citizen.html" class="btn btn-outline">Track on Map</a><button class="btn btn-primary" onclick="resetEmergency()">Report Another</button></div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="/static/storage.js"></script>
+<script>
+const session = LSCW.getSession();
+if (session) { document.getElementById('navLoginBtn').style.display = 'none'; document.getElementById('navLogoutBtn').style.display = 'block'; document.getElementById('navLogoutBtn').addEventListener('click', () => { LSCW.clearSession(); window.location.href = '/'; }); }
+document.getElementById('navLoginBtn').addEventListener('click', () => window.location.href = '/');
+
+let userCoords = { lat: 31.5204, lng: 74.3587 };
+const locationText = document.getElementById('locationText');
+if (navigator.geolocation) { navigator.geolocation.getCurrentPosition(pos => { userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude }; locationText.textContent = `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`; }, () => { locationText.textContent = 'Gulberg, Lahore'; }); }
+
+let selectedHazard = null;
+function selectHazard(card) { document.querySelectorAll('.hazard-card').forEach(c => c.classList.remove('selected')); card.classList.add('selected'); selectedHazard = card.dataset.hazard; }
+
+function showToast(msg, type) { const tc = document.getElementById('toast-container'); const t = document.createElement('div'); t.className = `toast toast-${type}`; t.innerHTML = `<span class="material-symbols-outlined">${type==='success'?'check_circle':type==='error'?'error':'info'}</span> ${msg}`; tc.appendChild(t); setTimeout(() => t.remove(), 3500); }
+
+function sendAlert() {
+  if (!selectedHazard) { showToast('Please select a hazard type.', 'error'); return; }
+  const btn = document.getElementById('sendBtn'); btn.disabled = true; btn.innerHTML = '<span class="material-symbols-outlined">hourglass_empty</span> Sending Alert...';
+  const report = LSCW.saveReport({ category: selectedHazard, description: document.getElementById('extraDetail').value.trim() || 'Emergency hazard reported', lat: userCoords.lat, lng: userCoords.lng, priority: 'urgent', reportedBy: session?.name || 'Anonymous', reporterEmail: session?.email || '', reporterPhone: session?.phone || 'N/A', reporterId: session?.userId || 'guest', type: 'emergency' });
+  setTimeout(() => { document.getElementById('confirmType').textContent = selectedHazard; document.getElementById('confirmRef').textContent = report.reportId; document.getElementById('confirmOverlay').style.display = 'flex'; btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined">emergency</span>Send Emergency Alert<span class="material-symbols-outlined">send</span>'; }, 1500);
+}
+
+function resetEmergency() { document.getElementById('confirmOverlay').style.display = 'none'; selectedHazard = null; document.querySelectorAll('.hazard-card').forEach(c => c.classList.remove('selected')); document.getElementById('extraDetail').value = ''; }
+</script>
+</body>
+</html>
