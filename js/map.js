@@ -10,14 +10,13 @@ document.addEventListener('DOMContentLoaded', function() {
   initMap();
 });
 
-function initMap() {
+async function initMap() {
   map = L.map('map', { zoomControl: false, maxZoom: 19, minZoom: 10 }).setView([31.5204, 74.3587], 13);
   window.LSCW_MAP = map;
   
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CARTO',
-    subdomains: 'abcd',
-    maxZoom: 19
+    subdomains: 'abcd', maxZoom: 19
   }).addTo(map);
   
   L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -36,24 +35,26 @@ function initMap() {
     });
   };
   
-  window.loadAllMarkers = function() {
+  window.loadAllMarkers = async function() {
     markerLayer.clearLayers();
-    const reports = LSCW.getReports();
+    const reports = await LSCW.getReports();
     const session = LSCW.getSession();
-    reports.forEach(report => {
-      if (session && session.role === 'admin') { addMarkerToMap(report); }
-      else if (session && report.reporterId === session.userId) { addMarkerToMap(report); }
-    });
+    if (Array.isArray(reports)) {
+      reports.forEach(report => {
+        if (session && session.role === 'admin') { addMarkerToMap(report); }
+        else if (session && report.reporterId === session.userId) { addMarkerToMap(report); }
+      });
+    }
   };
   
   window.addMarkerToMap = function(report) {
     const marker = L.marker([report.lat, report.lng], { icon: makeMarkerIcon(report.category, report.status, report.priority) }).addTo(markerLayer);
-    marker.bindPopup(`<div style="min-width:200px;padding:8px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span style="font-size:18px">${categoryIcons[report.category]||'📍'}</span><span style="font-weight:700">${LSCW.sanitise(report.category)}</span></div><p style="font-size:12px;color:#475569;margin-bottom:8px">${LSCW.sanitise(report.description).substring(0,100)}...</p><p style="font-size:11px;color:#64748b">📍 ${LSCW.sanitise(report.zone||'Lahore')}</p><div style="display:flex;align-items:center;gap:6px;margin:8px 0"><span class="status-dot ${report.status==='pending'?'pending':report.status==='resolved'?'resolved':'progress'}"></span><span style="font-size:11px;font-weight:600">${report.status}</span></div><p style="font-size:10px;color:#94a3b8">${report.reportId}</p></div>`, { maxWidth: 260 });
+    marker.bindPopup(`<div style="min-width:200px;padding:8px"><div style="font-size:18px;font-weight:700">${categoryIcons[report.category]||'📍'} ${LSCW.sanitise(report.category)}</div><p style="font-size:12px;color:#475569">${LSCW.sanitise(report.description).substring(0,100)}...</p><p style="font-size:10px;color:#94a3b8">${report.reportId} | ${report.status}</p></div>`, { maxWidth: 260 });
     return marker;
   };
   
   map.on('click', function(e) { if (clickMode) { clickMode = false; if (typeof openReportModal === 'function') openReportModal(e.latlng); const hint = document.getElementById('mapHint'); if (hint) hint.style.display = 'none'; } });
-  loadAllMarkers();
+  await loadAllMarkers();
 }
 
 window.addReportMarker = function(report) { if (markerLayer && map) { const marker = addMarkerToMap(report); map.flyTo([report.lat, report.lng], 16, { duration: 0.8 }); marker.openPopup(); } };
