@@ -55,7 +55,7 @@
 <div class="dashboard-container">
   <aside class="sidebar">
     <div class="sidebar-header"><div class="user-profile"><div class="user-avatar" id="userAvatar">CA</div><div><h4 id="sidebarName" style="color:white;margin-bottom:2px;font-size:1rem;font-weight:700">Loading...</h4><p style="font-size:0.7rem;opacity:0.85">My Reports Dashboard</p></div></div></div>
-    <div class="sidebar-content" id="sidebarContent"><div class="empty-state"><span class="material-symbols-outlined" style="font-size:48px;opacity:0.25;margin-bottom:16px">assignment</span><p>Loading your reports...</p></div></div>
+    <div class="sidebar-content" id="sidebarContent"><div class="empty-state">Loading your reports...</div></div>
   </aside>
   <section class="map-section"><div id="map"></div></section>
 </div>
@@ -67,15 +67,15 @@
   <div class="modal" style="max-width:550px">
     <div class="modal-header"><div class="modal-title">Report New Issue</div><button class="modal-close" onclick="closeModal('reportModal')"><span class="material-symbols-outlined">close</span></button></div>
     <div class="modal-body">
-      <div style="background:#fef3c7;border:1px solid #d97706;border-radius:8px;padding:12px;margin-bottom:20px;display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="color:#d97706">gavel</span><span style="font-size:0.8rem"><strong>Legal Notice:</strong> False reports are punishable under PPC Section 182.</span></div>
+      <div style="background:#fef3c7;border:1px solid #d97706;border-radius:8px;padding:12px;margin-bottom:20px"><strong>Legal Notice:</strong> False reports are punishable under PPC Section 182.</div>
       <form id="reportForm" onsubmit="submitReport(event)">
-        <div class="form-group"><label class="form-label">Location</label><div style="background:#f1f5f9;padding:12px;border-radius:8px;display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="color:#003f87">location_on</span><span id="locationDisplay">Click on map to select location</span></div></div>
-        <div class="form-group"><label class="form-label">Category <span class="required">*</span></label><select class="form-select" id="reportCategory" required><option value="">Select category...</option><option value="Pothole">Pothole</option><option value="Waste">Waste</option><option value="Water Leak">Water Leak</option><option value="Street Light">Street Light</option><option value="Sewerage">Sewerage</option><option value="Encroachment">Encroachment</option><option value="Open Manhole">Open Manhole</option><option value="Other">Other</option></select></div>
-        <div class="form-group"><label class="form-label">Priority</label><div style="display:flex;gap:16px"><label><input type="radio" name="priority" value="normal" checked> Normal</label><label><input type="radio" name="priority" value="urgent"> Urgent</label></div></div>
-        <div class="form-group"><label class="form-label">Description <span class="required">*</span></label><textarea class="form-textarea" id="reportDesc" rows="3" required></textarea></div>
+        <div class="form-group"><label class="form-label">Location</label><div style="background:#f1f5f9;padding:12px;border-radius:8px"><span id="locationDisplay">Click on map to select location</span></div></div>
+        <div class="form-group"><label class="form-label">Category *</label><select class="form-select" id="reportCategory" required><option value="">Select...</option><option value="Pothole">Pothole</option><option value="Waste">Waste</option><option value="Water Leak">Water Leak</option><option value="Street Light">Street Light</option><option value="Sewerage">Sewerage</option><option value="Encroachment">Encroachment</option><option value="Open Manhole">Open Manhole</option><option value="Other">Other</option></select></div>
+        <div class="form-group"><label class="form-label">Priority</label><label><input type="radio" name="priority" value="normal" checked> Normal</label> <label><input type="radio" name="priority" value="urgent"> Urgent</label></div>
+        <div class="form-group"><label class="form-label">Description *</label><textarea class="form-textarea" id="reportDesc" rows="3" required></textarea></div>
         <div class="form-group"><label class="form-label">Address</label><input type="text" class="form-input" id="reportAddress"></div>
-        <div class="form-group"><label class="form-label">Phone <span class="required">*</span></label><input type="tel" class="form-input" id="reportPhone" required></div>
-        <div class="form-group"><label class="form-label">Photo <span class="required">*</span></label><div onclick="document.getElementById('reportPhoto').click()" style="border:2px dashed #cbd5e1;border-radius:12px;padding:24px;text-align:center;cursor:pointer"><span class="material-symbols-outlined" style="font-size:32px;color:#94a3b8">cloud_upload</span><p style="margin-top:8px">Click to upload photo</p><input type="file" id="reportPhoto" accept="image/*" style="display:none"><img id="photoPreview" style="display:none;max-width:100%;max-height:150px;margin-top:12px;border-radius:8px"></div></div>
+        <div class="form-group"><label class="form-label">Phone *</label><input type="tel" class="form-input" id="reportPhone" required></div>
+        <div class="form-group"><label class="form-label">Photo</label><div onclick="document.getElementById('reportPhoto').click()" style="border:2px dashed #cbd5e1;border-radius:12px;padding:24px;text-align:center;cursor:pointer"><span class="material-symbols-outlined">cloud_upload</span><p>Click to upload</p><input type="file" id="reportPhoto" accept="image/*" style="display:none"><img id="photoPreview" style="display:none;max-width:100%;max-height:150px;margin-top:12px;border-radius:8px"></div></div>
         <button type="submit" class="btn btn-primary w-full btn-lg"><span class="material-symbols-outlined">send</span>Submit Report</button>
       </form>
     </div>
@@ -100,13 +100,13 @@ function getCategoryIcon(cat) { const icons = { 'Pothole': '🕳️', 'Waste': '
 function loadMyReports() {
   const reports = LSCW.getReportsByUser(session.userId).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
   const container = document.getElementById('sidebarContent');
-  if (reports.length === 0) { container.innerHTML = '<div class="empty-state"><span class="material-symbols-outlined" style="font-size:48px;opacity:0.25;margin-bottom:16px">inbox</span><h4 style="color:#555">No Reports Yet</h4><p>Click "Report New Issue" to submit.</p></div>'; return; }
+  if (reports.length === 0) { container.innerHTML = '<div class="empty-state"><h4>No Reports Yet</h4><p>Click "Report New Issue" to submit.</p></div>'; return; }
   container.innerHTML = reports.map(report => {
     const bs = { pending: 'badge-pending', 'in-progress': 'badge-progress', resolved: 'badge-resolved' };
     const sl = { pending: 'PENDING', 'in-progress': 'IN PROGRESS', resolved: 'RESOLVED' };
     const sc = report.status === 'pending' ? 'pending' : report.status === 'resolved' ? 'resolved' : 'progress';
     const canSupport = report.status === 'resolved';
-    return `<div class="report-card" data-lat="${report.lat}" data-lng="${report.lng}"><div class="report-card-header"><span class="report-id">${report.reportId}</span><span class="badge ${bs[report.status]}">${sl[report.status]}</span></div><div class="report-category"><span>${getCategoryIcon(report.category)}</span>${LSCW.sanitise(report.category)}</div><div class="report-desc">${LSCW.sanitise(report.description).substring(0,120)}${report.description.length>120?'...':''}</div><div class="report-meta"><span><span class="material-symbols-outlined" style="font-size:12px">location_on</span>${LSCW.sanitise(report.zone||'Lahore')}</span><span><span class="material-symbols-outlined" style="font-size:12px">schedule</span>${LSCW.timeAgo(report.createdAt)}</span></div><div class="status-row"><span class="status-dot ${sc}"></span><span class="status-text">${report.status==='pending'?'Awaiting Review':report.status==='in-progress'?'Being Processed':'Completed'}</span></div>${report.adminNotes?`<div class="admin-update"><strong>Admin Update</strong><br>${LSCW.sanitise(report.adminNotes)}</div>`:''}<a href="/citizen-support.html" class="support-link ${!canSupport?'disabled':''}"><span class="material-symbols-outlined" style="font-size:14px">${canSupport?'support_agent':'lock'}</span> ${canSupport?'Open Support Ticket':'Support Available After Resolution'}</a></div>`;
+    return `<div class="report-card" data-lat="${report.lat}" data-lng="${report.lng}"><div class="report-card-header"><span class="report-id">${report.reportId}</span><span class="badge ${bs[report.status]}">${sl[report.status]}</span></div><div class="report-category"><span>${getCategoryIcon(report.category)}</span>${LSCW.sanitise(report.category)}</div><div class="report-desc">${LSCW.sanitise(report.description).substring(0,120)}...</div><div class="report-meta"><span>${LSCW.sanitise(report.zone||'Lahore')}</span><span>${LSCW.timeAgo(report.createdAt)}</span></div><div class="status-row"><span class="status-dot ${sc}"></span><span class="status-text">${report.status==='pending'?'Awaiting Review':report.status==='in-progress'?'Being Processed':'Completed'}</span></div>${report.adminNotes?`<div class="admin-update"><strong>Admin Update</strong><br>${LSCW.sanitise(report.adminNotes)}</div>`:''}<a href="/citizen-support.html" class="support-link ${!canSupport?'disabled':''}">${canSupport?'Open Support Ticket':'Support Available After Resolution'}</a></div>`;
   }).join('');
   container.querySelectorAll('.report-card').forEach(card=>{card.addEventListener('click',()=>{if(window.LSCW_MAP)window.LSCW_MAP.setView([parseFloat(card.dataset.lat),parseFloat(card.dataset.lng)],16);});});
 }
@@ -118,28 +118,65 @@ document.getElementById('reportPhoto').addEventListener('change',function(e){con
 async function submitReport(e){
   e.preventDefault();
   if(!pendingLocation){showToast('Select location on map','error');return;}
-  const pf=document.getElementById('reportPhoto').files[0]; const fd=new FormData();
-  fd.append('category',document.getElementById('reportCategory').value); fd.append('description',document.getElementById('reportDesc').value);
-  fd.append('latitude',pendingLocation.lat); fd.append('longitude',pendingLocation.lng);
-  fd.append('address',document.getElementById('reportAddress').value);
-  fd.append('priority',document.querySelector('input[name="priority"]:checked').value);
-  fd.append('reporter_name',session.name); fd.append('reporter_email',session.email);
-  fd.append('reporter_phone',document.getElementById('reportPhone').value);
-  if(pf)fd.append('photo',pf);
-  const token=LSCW.getSession()?.accessToken;
-  try{
-    const res=await fetch('/api/reports/',{method:'POST',headers:{'Authorization':token?`Bearer ${token}`:''},body:fd});
-    const report=await res.json();
-    if(report.id){
-      const lr={id:report.id,reportId:report.report_number,category:report.category,description:report.description,lat:parseFloat(report.latitude),lng:parseFloat(report.longitude),address:report.address||'',zone:report.zone||'Lahore',status:report.status,priority:report.priority,reportedBy:session.name,reporterEmail:session.email,reporterPhone:document.getElementById('reportPhone').value,reporterId:session.userId,createdAt:report.created_at,photo:report.photo||null,adminNotes:'',adminPhoto:null,estimatedResolution:null,resolutionDate:null};
-      const reports=JSON.parse(localStorage.getItem('lscw_reports')||'[]');reports.push(lr);
-      localStorage.setItem('lscw_reports',JSON.stringify(reports));
-      if(window.addReportMarker)window.addReportMarker(lr);
-      showToast('Report submitted!','success');
+  
+  const reportData = {
+    category: document.getElementById('reportCategory').value,
+    description: document.getElementById('reportDesc').value,
+    lat: pendingLocation.lat,
+    lng: pendingLocation.lng,
+    address: document.getElementById('reportAddress').value,
+    priority: document.querySelector('input[name="priority"]:checked').value,
+    reportedBy: session.name,
+    reporterEmail: session.email,
+    reporterPhone: document.getElementById('reportPhone').value,
+    reporterId: session.userId
+  };
+  
+  const pf = document.getElementById('reportPhoto').files[0];
+  const token = LSCW.getSession()?.accessToken;
+  
+  // Try API first
+  try {
+    const fd = new FormData();
+    Object.keys(reportData).forEach(k => fd.append(k, reportData[k]));
+    if (pf) fd.append('photo', pf);
+    
+    const res = await fetch('/api/reports/', { method: 'POST', headers: { 'Authorization': token ? `Bearer ${token}` : '' }, body: fd });
+    const report = await res.json();
+    if (report.id) {
+      reportData.id = report.id;
+      reportData.reportId = report.report_number;
+      reportData.status = report.status;
+      reportData.createdAt = report.created_at;
+      reportData.photo = report.photo || null;
     }
-  }catch(err){showToast('Error','error');}
-  closeModal('reportModal');document.getElementById('reportForm').reset();
-  document.getElementById('photoPreview').style.display='none';pendingLocation=null;loadMyReports();
+  } catch(err) {
+    // API fail - save locally
+    reportData.id = Date.now().toString(36);
+    reportData.reportId = 'LHR-' + Date.now().toString().slice(-8) + '-' + Math.floor(Math.random()*1000).toString().padStart(3,'0');
+    reportData.status = 'pending';
+    reportData.createdAt = new Date().toISOString();
+    reportData.zone = 'Lahore';
+    reportData.photo = null;
+    reportData.adminNotes = '';
+    reportData.adminPhoto = null;
+    reportData.estimatedResolution = null;
+    reportData.resolutionDate = null;
+  }
+  
+  // Save to localStorage
+  const reports = JSON.parse(localStorage.getItem('lscw_reports') || '[]');
+  reports.push(reportData);
+  localStorage.setItem('lscw_reports', JSON.stringify(reports));
+  
+  if (window.addReportMarker) window.addReportMarker(reportData);
+  
+  closeModal('reportModal');
+  document.getElementById('reportForm').reset();
+  document.getElementById('photoPreview').style.display = 'none';
+  pendingLocation = null;
+  loadMyReports();
+  showToast('Report submitted!', 'success');
 }
 
 function openModal(id){document.getElementById(id).classList.add('active');}
