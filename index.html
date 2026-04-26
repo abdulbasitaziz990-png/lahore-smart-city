@@ -57,56 +57,44 @@
 </nav>
 
 <main>
-  <section class="hero-section">
-    <div class="container">
-      <div style="display:flex;gap:48px;align-items:center;flex-wrap:wrap">
-        <div style="flex:1;min-width:300px">
-          <div class="badge badge-primary" style="margin-bottom:16px"><span class="material-symbols-outlined" style="font-size:14px">verified</span>GIS-Powered Urban Intelligence</div>
-          <h1 class="hero-title">Building a Smarter,<br><span style="color:var(--c-primary)">Safer Lahore</span></h1>
-          <p class="hero-subtitle">Report infrastructure issues, track civic services, and visualize real-time district intelligence through our comprehensive GIS framework.</p>
-          <div style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn btn-primary btn-lg" id="heroGetStarted"><span class="material-symbols-outlined">rocket_launch</span>Get Started</button><a href="/emergency.html" class="btn btn-outline btn-lg" style="border-color:var(--c-danger);color:var(--c-danger)"><span class="material-symbols-outlined">emergency</span>Emergency</a></div>
-          <div class="legal-banner"><div style="display:flex;align-items:center;gap:12px"><span class="material-symbols-outlined" style="color:var(--c-warning);font-size:28px">gavel</span><div><strong style="color:var(--c-warning)">⚠️ Legal Warning</strong><p style="font-size:0.85rem;color:var(--c-text-secondary);margin-top:4px">Filing false reports is a punishable offense under Section 182 PPC. All reports are logged with phone numbers for verification.</p></div></div></div>
-        </div>
-        <div style="flex:1;min-width:300px">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="stat-card"><div class="stat-number" id="homeActiveReports">0</div><div class="stat-label">Active Reports</div><div class="stat-trend"><span class="material-symbols-outlined" style="font-size:14px">trending_up</span>Updated real-time</div></div><div class="stat-card"><div class="stat-number" id="homeResolvedReports">0</div><div class="stat-label">Issues Resolved</div><div class="stat-trend"><span class="material-symbols-outlined" style="font-size:14px">check_circle</span>This month</div></div></div>
-          <div style="margin-top:16px"><div class="stat-card"><div style="display:flex;align-items:center;gap:16px"><div><div class="stat-number" id="homeZonesCount">10</div><div class="stat-label">Lahore Zones</div></div><div style="width:1px;height:50px;background:var(--c-border)"></div><div><div class="stat-number" id="homeCitizensCount">0</div><div class="stat-label">Active Citizens</div></div></div></div></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="feature-section">
-    <div class="container">
-      <h2 class="section-title">How It Works</h2>
-      <p class="section-subtitle">Three simple steps to improve your city</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
-        <div class="feature-card"><div class="feature-icon"><span class="material-symbols-outlined icon-filled">location_on</span></div><h3 class="feature-title">1. Pin the Issue</h3><p class="feature-desc">Click anywhere on the interactive map to report infrastructure problems with precise GPS coordinates.</p></div>
-        <div class="feature-card"><div class="feature-icon"><span class="material-symbols-outlined icon-filled">description</span></div><h3 class="feature-title">2. Submit Report</h3><p class="feature-desc">Add category, description, and optional photos. Your report enters our spatial database instantly with a unique tracking ID.</p></div>
-        <div class="feature-card"><div class="feature-icon"><span class="material-symbols-outlined icon-filled">verified</span></div><h3 class="feature-title">3. Track Resolution</h3><p class="feature-desc">Monitor status updates from Pending → In Progress → Resolved. Receive notifications when your issue is addressed.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="stats-section">
-    <div class="container"><div class="stats-grid-home"><div class="stat-item"><div class="stat-item-value" id="statsTotalReports">0</div><div class="stat-item-label">Total Reports</div></div><div class="stat-item"><div class="stat-item-value" id="statsPendingReports">0</div><div class="stat-item-label">Pending</div></div><div class="stat-item"><div class="stat-item-value" id="statsResolvedReports">0</div><div class="stat-item-label">Resolved</div></div><div class="stat-item"><div class="stat-item-value" id="statsAvgResponse">0</div><div class="stat-item-label">Avg Response (days)</div></div></div></div>
-  </section>
-
-  <section class="cta-section">
-    <div class="container">
-      <h2 class="cta-title">Ready to Make Lahore Better?</h2>
-      <p class="cta-subtitle">Join thousands of citizens actively reporting and tracking civic issues.</p>
-      <div style="display:flex;gap:16px;justify-content:center"><button class="btn btn-primary btn-lg" id="ctaSignupBtn" style="background:white;color:var(--c-primary)"><span class="material-symbols-outlined">person_add</span>Create Free Account</button><button class="btn btn-outline btn-lg" id="ctaLearnMore" style="border-color:white;color:white"><span class="material-symbols-outlined">info</span>Learn More</button></div>
-    </div>
-  </section>
+  <section class="hero-section"><div class="container"><div style="display:flex;gap:48px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:300px"><div class="badge badge-primary" style="margin-bottom:16px"><span class="material-symbols-outlined">verified</span>GIS-Powered Urban Intelligence</div><h1 class="hero-title">Building a Smarter,<br><span style="color:var(--c-primary)">Safer Lahore</span></h1><p class="hero-subtitle">Report infrastructure issues, track civic services, and visualize real-time district intelligence.</p><div style="display:flex;gap:12px"><button class="btn btn-primary btn-lg" id="heroGetStarted">Get Started</button><a href="/emergency.html" class="btn btn-outline btn-lg" style="border-color:var(--c-danger);color:var(--c-danger)">Emergency</a></div><div class="legal-banner"><strong style="color:var(--c-warning)">⚠️ Legal Warning:</strong> False reports are punishable under PPC Section 182.</div></div><div style="flex:1;min-width:300px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="stat-card"><div class="stat-number" id="homeActiveReports">0</div><div class="stat-label">Active Reports</div></div><div class="stat-card"><div class="stat-number" id="homeResolvedReports">0</div><div class="stat-label">Resolved</div></div></div><div style="margin-top:16px"><div class="stat-card"><div style="display:flex;align-items:center;gap:16px"><div><div class="stat-number" id="homeZonesCount">10</div><div class="stat-label">Lahore Zones</div></div><div><div class="stat-number" id="homeCitizensCount">0</div><div class="stat-label">Citizens</div></div></div></div></div></div></div></div></section>
+  <section class="feature-section"><div class="container"><h2 class="section-title">How It Works</h2><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px"><div class="feature-card"><div class="feature-icon"><span class="material-symbols-outlined icon-filled">location_on</span></div><h3 class="feature-title">1. Pin the Issue</h3><p class="feature-desc">Click on the interactive map to report problems.</p></div><div class="feature-card"><div class="feature-icon"><span class="material-symbols-outlined icon-filled">description</span></div><h3 class="feature-title">2. Submit Report</h3><p class="feature-desc">Add details and photos. Get a tracking ID.</p></div><div class="feature-card"><div class="feature-icon"><span class="material-symbols-outlined icon-filled">verified</span></div><h3 class="feature-title">3. Track Resolution</h3><p class="feature-desc">Monitor Pending → In Progress → Resolved.</p></div></div></div></section>
+  <section class="stats-section"><div class="container"><div class="stats-grid-home"><div class="stat-item"><div class="stat-item-value" id="statsTotalReports">0</div><div class="stat-item-label">Total</div></div><div class="stat-item"><div class="stat-item-value" id="statsPendingReports">0</div><div class="stat-item-label">Pending</div></div><div class="stat-item"><div class="stat-item-value" id="statsResolvedReports">0</div><div class="stat-item-label">Resolved</div></div><div class="stat-item"><div class="stat-item-value">0</div><div class="stat-item-label">Avg Days</div></div></div></div></section>
+  <section class="cta-section"><div class="container"><h2 class="cta-title">Ready to Make Lahore Better?</h2><p class="cta-subtitle">Join citizens actively reporting and tracking issues.</p><button class="btn btn-primary btn-lg" id="ctaSignupBtn" style="background:white;color:var(--c-primary)">Create Free Account</button></div></section>
 </main>
 
 <footer style="background:var(--c-primary-dark);color:white;padding:48px 0 24px">
   <div class="container">
     <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;margin-bottom:32px">
-      <div><h4 style="font-family:var(--ff-head);font-weight:700;margin-bottom:16px">Lahore Smart City Watch</h4><p style="opacity:0.8;font-size:0.875rem;line-height:1.6">A GIS-based urban intelligence framework for civic engagement and infrastructure monitoring across Lahore.</p></div>
-      <div><h5 style="font-weight:600;margin-bottom:16px">Quick Links</h5><ul style="list-style:none;opacity:0.8;font-size:0.875rem"><li style="margin-bottom:10px"><a href="/citizen.html">Citizen Portal</a></li><li style="margin-bottom:10px"><a href="/emergency.html">Emergency Report</a></li><li style="margin-bottom:10px"><a href="/about.html">About Us</a></li></ul></div>
-      <div><h5 style="font-weight:600;margin-bottom:16px">Emergency Numbers</h5><ul style="list-style:none;opacity:0.8;font-size:0.875rem"><li style="margin-bottom:10px">Rescue: 1122</li><li style="margin-bottom:10px">Police: 15</li><li style="margin-bottom:10px">Fire: 16</li><li style="margin-bottom:10px">WASA: 042-99332010</li></ul></div>
-      <div><h5 style="font-weight:600;margin-bottom:16px">Contact</h5><ul style="list-style:none;opacity:0.8;font-size:0.875rem"><li style="margin-bottom:10px">Email: info@lscw.pk</li><li style="margin-bottom:10px">Phone: +92 42 99201111</li><li style="margin-bottom:10px">Address: Gulberg III, Lahore</li></ul></div>
+      <div>
+        <h4 style="font-family:var(--ff-head);font-weight:700;margin-bottom:16px">Lahore Smart City Watch</h4>
+        <p style="opacity:0.8;font-size:0.875rem;line-height:1.6">A GIS-based urban intelligence framework for civic engagement and infrastructure monitoring across Lahore.</p>
+      </div>
+      <div>
+        <h5 style="font-weight:600;margin-bottom:16px">Quick Links</h5>
+        <ul style="list-style:none;opacity:0.8;font-size:0.875rem">
+          <li style="margin-bottom:10px"><a href="/citizen.html">Citizen Portal</a></li>
+          <li style="margin-bottom:10px"><a href="/emergency.html">Emergency Report</a></li>
+          <li style="margin-bottom:10px"><a href="/about.html">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 style="font-weight:600;margin-bottom:16px">Emergency Numbers</h5>
+        <ul style="list-style:none;opacity:0.8;font-size:0.875rem">
+          <li style="margin-bottom:10px">Rescue: 1122</li>
+          <li style="margin-bottom:10px">Police: 15</li>
+          <li style="margin-bottom:10px">Fire: 16</li>
+          <li style="margin-bottom:10px">WASA: 042-99332010</li>
+        </ul>
+      </div>
+      <div>
+        <h5 style="font-weight:600;margin-bottom:16px">Contact</h5>
+        <ul style="list-style:none;opacity:0.8;font-size:0.875rem">
+          <li style="margin-bottom:10px">Email: info@lscw.pk</li>
+          <li style="margin-bottom:10px">Phone: +92 42 99201111</li>
+          <li style="margin-bottom:10px">Address: Gulberg III, Lahore</li>
+        </ul>
+      </div>
     </div>
     <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:24px;text-align:center;font-size:0.75rem;opacity:0.6">© 2026 Lahore Smart City Watch — GIS-Based Urban Intelligence Framework | Final Year Project | CGIS, University of the Punjab</div>
   </div>
@@ -117,19 +105,9 @@
     <div class="modal-header"><div style="font-size:1.5rem;font-weight:700" id="modalTitle">Sign In</div><button class="modal-close" onclick="closeModal('authModal')"><span class="material-symbols-outlined">close</span></button></div>
     <div class="modal-body">
       <div class="auth-tabs"><div class="auth-tab active" data-tab="login">Sign In</div><div class="auth-tab" data-tab="signup">Create Account</div></div>
-      <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
-        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" required></div>
-        <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="loginPassword" required></div>
-        <button type="submit" class="btn btn-primary w-full btn-lg">Sign In</button>
-      </form>
-      <form id="signupForm" class="auth-form hidden" onsubmit="handleSignup(event)">
-        <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="signupName" required></div>
-        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="signupEmail" required></div>
-        <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="signupPhone" required></div>
-        <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="signupPassword" required minlength="8"></div>
-        <button type="submit" class="btn btn-primary w-full btn-lg">Create Account</button>
-      </form>
-      <p style="text-align:center;margin-top:16px;font-size:0.8rem"><span id="footerText">Don't have an account?</span><a href="#" id="switchTabLink" style="color:var(--c-primary);font-weight:600;margin-left:4px">Create one</a></p>
+      <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)"><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" required></div><div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="loginPassword" required></div><button type="submit" class="btn btn-primary w-full btn-lg">Sign In</button></form>
+      <form id="signupForm" class="auth-form hidden" onsubmit="handleSignup(event)"><div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" id="signupName" required></div><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="signupEmail" required></div><div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="signupPhone" required></div><div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="signupPassword" required minlength="8"></div><button type="submit" class="btn btn-primary w-full btn-lg">Create Account</button></form>
+      <p style="text-align:center;margin-top:16px;font-size:0.8rem"><span id="footerText">Don't have an account?</span><a href="#" id="switchTabLink" style="color:var(--c-primary);font-weight:600">Create one</a></p>
     </div>
   </div>
 </div>
@@ -141,12 +119,12 @@
 const session = LSCW.getSession(); if (session) window.location.href = '/citizen.html';
 function $(id) { return document.getElementById(id); }
 
-function loadHomeStats() {
-  const reports = LSCW.getReports(), zones = LSCW.getZones();
+async function loadHomeStats() {
+  const reports = await LSCW.getReports();
+  const zones = LSCW.getZones();
   $('homeActiveReports').textContent = reports.filter(r => r.status !== 'resolved').length;
   $('homeResolvedReports').textContent = reports.filter(r => r.status === 'resolved').length;
   $('homeZonesCount').textContent = zones.length;
-  $('homeCitizensCount').textContent = JSON.parse(localStorage.getItem('lscw_users') || '[]').length;
   $('statsTotalReports').textContent = reports.length;
   $('statsPendingReports').textContent = reports.filter(r => r.status === 'pending').length;
   $('statsResolvedReports').textContent = reports.filter(r => r.status === 'resolved').length;
@@ -157,7 +135,6 @@ $('loginBtn').addEventListener('click', () => openAuthModal('login'));
 $('signupBtn').addEventListener('click', () => openAuthModal('signup'));
 $('heroGetStarted').addEventListener('click', () => openAuthModal('signup'));
 $('ctaSignupBtn').addEventListener('click', () => openAuthModal('signup'));
-$('ctaLearnMore').addEventListener('click', () => window.location.href = '/about.html');
 
 function openModal(id) { $(id).classList.add('active'); }
 function closeModal(id) { $(id).classList.remove('active'); }
@@ -177,27 +154,15 @@ document.querySelectorAll('.auth-tab').forEach(t => t.addEventListener('click', 
 $('switchTabLink').addEventListener('click', e => { e.preventDefault(); switchTab(document.querySelector('.auth-tab.active').dataset.tab === 'login' ? 'signup' : 'login'); });
 document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('active'); }));
 
-function showToast(msg, type) {
-  const tc = $('toast-container'); const t = document.createElement('div');
-  t.className = `toast toast-${type}`; t.innerHTML = `<span class="material-symbols-outlined">${type==='success'?'check_circle':type==='error'?'error':'info'}</span> ${msg}`;
-  tc.appendChild(t); setTimeout(() => { t.classList.add('removing'); setTimeout(() => t.remove(), 300); }, 4000);
-}
+function showToast(msg, type) { const t = document.createElement('div'); t.className = `toast toast-${type}`; t.innerHTML = `<span class="material-symbols-outlined">${type==='success'?'check_circle':type==='error'?'error':'info'}</span> ${msg}`; $('toast-container').appendChild(t); setTimeout(() => { t.classList.add('removing'); setTimeout(() => t.remove(), 300); }, 4000); }
 
-async function handleLogin(e) {
-  e.preventDefault();
-  const result = await LSCW.loginUser($('loginEmail').value, $('loginPassword').value);
-  if (result.ok) { showToast('Login successful!', 'success'); setTimeout(() => window.location.href = '/citizen.html', 500); }
-  else { showToast(result.error, 'error'); }
-}
+async function handleLogin(e) { e.preventDefault(); const r = await LSCW.loginUser($('loginEmail').value, $('loginPassword').value); if (r.ok) { showToast('Login successful!', 'success'); setTimeout(() => window.location.href = '/citizen.html', 500); } else { showToast(r.error, 'error'); } }
 
 async function handleSignup(e) {
   e.preventDefault();
-  const result = await LSCW.registerUser({ name: $('signupName').value, email: $('signupEmail').value, phone: $('signupPhone').value, password: $('signupPassword').value });
-  if (result.ok) {
-    showToast('Account created! Logging in...', 'success');
-    const loginResult = await LSCW.loginUser($('signupEmail').value, $('signupPassword').value);
-    if (loginResult.ok) { setTimeout(() => window.location.href = '/citizen.html', 500); }
-  } else { showToast(result.error, 'error'); }
+  const r = await LSCW.registerUser({ name: $('signupName').value, email: $('signupEmail').value, phone: $('signupPhone').value, password: $('signupPassword').value });
+  if (r.ok) { showToast('Account created! Logging in...', 'success'); const l = await LSCW.loginUser($('signupEmail').value, $('signupPassword').value); if (l.ok) { setTimeout(() => window.location.href = '/citizen.html', 500); } } 
+  else { showToast(r.error, 'error'); }
 }
 </script>
 </body>
