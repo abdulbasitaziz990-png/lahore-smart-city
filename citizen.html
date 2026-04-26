@@ -9,264 +9,65 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    body { 
-      overflow: hidden; 
-      height: 100vh; 
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: #f1f5f9;
-    }
-    
-    /* ============================================
-       MAIN DASHBOARD LAYOUT - Flexbox Container
-       ============================================ */
-    .dashboard-container {
-      display: flex;
-      height: calc(100vh - 64px);
-      margin-top: 64px;
-      gap: 0;
-    }
-    
-    /* ============================================
-       SIDEBAR - Fixed Width, Scrollable
-       ============================================ */
-    .sidebar { 
-      width: 380px;
-      min-width: 380px;
-      height: calc(100vh - 64px);
-      background: rgba(255,255,255,0.97); 
-      backdrop-filter: blur(16px); 
-      border-right: 1px solid #e2e8f0;
-      display: flex; 
-      flex-direction: column; 
-      overflow: hidden; 
-      z-index: 10;
-    }
-    
-    .sidebar-header { 
-      padding: 20px 22px; 
-      background: linear-gradient(135deg, #003f87 0%, #0056b3 100%); 
-      color: white; 
-      flex-shrink: 0; 
-      position: relative; 
-      overflow: hidden;
-    }
-    .sidebar-header::before {
-      content: ''; position: absolute; top: -40px; right: -40px; 
-      width: 140px; height: 140px; background: rgba(255,255,255,0.04); 
-      border-radius: 50%;
-    }
-    
-    .user-profile { 
-      display: flex; align-items: center; gap: 14px; position: relative; z-index: 1; 
-    }
-    .user-avatar { 
-      width: 46px; height: 46px; border-radius: 50%; 
-      background: rgba(255,255,255,0.2); 
-      display: flex; align-items: center; justify-content: center; 
-      font-weight: 700; font-size: 1.1rem; flex-shrink: 0; 
-      border: 2px solid rgba(255,255,255,0.3);
-    }
-    
-    .sidebar-content { 
-      flex: 1; 
-      overflow-y: auto; 
-      overflow-x: hidden;
-      padding: 14px; 
-    }
-    
-    /* ============================================
-       MAP SECTION - Flexible Width, Proper Container
-       ============================================ */
-    .map-section {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      background: #e2e8f0;
-      margin: 12px 12px 12px 0;
-      border-radius: 16px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    }
-    
-    #map { 
-      width: 100% !important; 
-      height: 100% !important;
-      border-radius: 16px;
-      z-index: 1;
-    }
-    
-    /* ============================================
-       ZOOM CONTROLS - Bottom Right of Map Box
-       ============================================ */
-    .leaflet-control-zoom { 
-      border: none !important; 
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important; 
-      border-radius: 12px !important; 
-      overflow: hidden !important;
-      margin-bottom: 80px !important;
-      margin-right: 4px !important;
-    }
-    .leaflet-control-zoom a { 
-      width: 44px !important; height: 44px !important; 
-      line-height: 44px !important; font-size: 22px !important; 
-      color: #003f87 !important; background: white !important; 
-      border-bottom: 1px solid #e8ecf1 !important; 
-      text-align: center !important; 
-    }
+    body { overflow: hidden; height: 100vh; font-family: 'Inter', -apple-system, sans-serif; background: #f1f5f9; }
+    .dashboard-container { display: flex; height: calc(100vh - 64px); margin-top: 64px; }
+    .sidebar { width: 380px; min-width: 380px; height: calc(100vh - 64px); background: rgba(255,255,255,0.97); backdrop-filter: blur(16px); border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; z-index: 10; }
+    .sidebar-header { padding: 20px 22px; background: linear-gradient(135deg, #003f87 0%, #0056b3 100%); color: white; flex-shrink: 0; position: relative; overflow: hidden; }
+    .sidebar-header::before { content: ''; position: absolute; top: -40px; right: -40px; width: 140px; height: 140px; background: rgba(255,255,255,0.04); border-radius: 50%; }
+    .user-profile { display: flex; align-items: center; gap: 14px; position: relative; z-index: 1; }
+    .user-avatar { width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.3); }
+    .sidebar-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 14px; }
+    .map-section { flex: 1; position: relative; overflow: hidden; background: #e2e8f0; margin: 12px 12px 12px 0; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    #map { width: 100% !important; height: 100% !important; border-radius: 16px; z-index: 1; }
+    .leaflet-control-zoom { border: none !important; box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important; border-radius: 12px !important; overflow: hidden !important; margin-bottom: 80px !important; }
+    .leaflet-control-zoom a { width: 44px !important; height: 44px !important; line-height: 44px !important; font-size: 22px !important; color: #003f87 !important; background: white !important; border-bottom: 1px solid #e8ecf1 !important; text-align: center !important; }
     .leaflet-control-zoom a:hover { background: #f8fafc !important; }
     .leaflet-control-attribution { display: none !important; }
-    
-    /* ============================================
-       REPORT CARDS
-       ============================================ */
-    .report-card { 
-      background: white; border: 1px solid #e8ecf1; border-radius: 14px; 
-      padding: 14px 16px; margin-bottom: 10px; cursor: pointer; 
-      transition: all 0.25s ease;
-    }
-    .report-card:hover { 
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08); border-color: #003f87; 
-      transform: translateX(2px);
-    }
-    
-    .report-card-header { 
-      display: flex; justify-content: space-between; align-items: center; 
-      margin-bottom: 8px; 
-    }
-    .report-id { 
-      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; 
-      color: #003f87; font-weight: 600; background: #ebf4ff; 
-      padding: 3px 8px; border-radius: 6px;
-    }
-    
-    .report-category { 
-      font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; 
-      gap: 6px; margin-bottom: 4px; color: #1a1a1a;
-    }
+    .report-card { background: white; border: 1px solid #e8ecf1; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.25s ease; }
+    .report-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); border-color: #003f87; transform: translateX(2px); }
+    .report-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .report-id { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: #003f87; font-weight: 600; background: #ebf4ff; padding: 3px 8px; border-radius: 6px; }
+    .report-category { font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; color: #1a1a1a; }
     .report-desc { font-size: 0.78rem; color: #555; margin-bottom: 10px; line-height: 1.5; }
-    
-    .report-meta { 
-      display: flex; align-items: center; gap: 14px; font-size: 0.65rem; 
-      color: #888; margin-bottom: 8px; 
-    }
+    .report-meta { display: flex; align-items: center; gap: 14px; font-size: 0.65rem; color: #888; margin-bottom: 8px; }
     .report-meta span { display: flex; align-items: center; gap: 4px; }
-    
-    .status-row { 
-      display: flex; align-items: center; gap: 8px; padding: 6px 0; 
-      border-top: 1px solid #f0f0f0;
-    }
+    .status-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px solid #f0f0f0; }
     .status-text { font-size: 0.72rem; font-weight: 600; }
-    
-    .admin-update { 
-      background: #eff6ff; padding: 8px 12px; border-radius: 8px; 
-      font-size: 0.7rem; margin: 8px 0; border-left: 3px solid #2563eb; 
-      color: #1e40af;
-    }
-    
-    .support-link { 
-      display: block; padding: 8px 10px; background: #ecfdf5; 
-      border-radius: 8px; color: #059669; font-weight: 600; 
-      font-size: 0.73rem; text-align: center; margin-top: 8px; 
-      text-decoration: none; transition: all 0.2s; border: 1px solid #d1fae5;
-    }
-    .support-link:hover:not(.disabled) { 
-      background: #059669; color: white; border-color: #059669; 
-    }
-    .support-link.disabled { 
-      background: #f8f9fa; color: #aaa; border-color: #eee; 
-      cursor: not-allowed; pointer-events: none; 
-    }
-    
-    /* ============================================
-       FAB BUTTON - On top of map, bottom-right
-       ============================================ */
-    .fab { 
-      position: fixed; bottom: 32px; right: 32px; 
-      background: linear-gradient(135deg, #003f87, #0056b3); color: white; 
-      display: flex; align-items: center; gap: 10px; padding: 16px 28px; 
-      border-radius: 50px; box-shadow: 0 8px 28px rgba(0,63,135,0.4); 
-      font-weight: 600; cursor: pointer; border: none; z-index: 100; 
-      transition: all 0.3s; 
-    }
+    .admin-update { background: #eff6ff; padding: 8px 12px; border-radius: 8px; font-size: 0.7rem; margin: 8px 0; border-left: 3px solid #2563eb; color: #1e40af; }
+    .support-link { display: block; padding: 8px 10px; background: #ecfdf5; border-radius: 8px; color: #059669; font-weight: 600; font-size: 0.73rem; text-align: center; margin-top: 8px; text-decoration: none; transition: all 0.2s; border: 1px solid #d1fae5; }
+    .support-link:hover:not(.disabled) { background: #059669; color: white; border-color: #059669; }
+    .support-link.disabled { background: #f8f9fa; color: #aaa; border-color: #eee; cursor: not-allowed; pointer-events: none; }
+    .fab { position: fixed; bottom: 32px; right: 32px; background: linear-gradient(135deg, #003f87, #0056b3); color: white; display: flex; align-items: center; gap: 10px; padding: 16px 28px; border-radius: 50px; box-shadow: 0 8px 28px rgba(0,63,135,0.4); font-weight: 600; cursor: pointer; border: none; z-index: 100; transition: all 0.3s; }
     .fab:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,63,135,0.5); }
-    
-    .map-hint { 
-      position: fixed; bottom: 110px; right: 32px; background: #1a1a2e; 
-      color: white; padding: 12px 22px; border-radius: 50px; font-size: 0.85rem; 
-      z-index: 100; display: none; align-items: center; gap: 8px; 
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3); 
-    }
-    
+    .map-hint { position: fixed; bottom: 110px; right: 32px; background: #1a1a2e; color: white; padding: 12px 22px; border-radius: 50px; font-size: 0.85rem; z-index: 100; display: none; align-items: center; gap: 8px; box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
     .empty-state { text-align: center; padding: 50px 20px; color: #888; }
+    @media (max-width: 768px) { .dashboard-container { flex-direction: column; } .sidebar { width: 100%; min-width: 100%; height: 45%; } .map-section { margin: 0; border-radius: 0; height: 55%; } .fab { bottom: 20px; right: 20px; padding: 12px 20px; font-size: 0.8rem; } }
   </style>
 </head>
 <body>
 
 <nav class="topnav">
-  <a class="topnav-brand" href="/citizen.html">
-    <span class="material-symbols-outlined">location_city</span>Lahore Smart City Watch
-  </a>
-  <div class="topnav-links">
-    <a href="/citizen.html" class="active">My Reports</a>
-    <a href="/emergency.html">Emergency</a>
-    <a href="/citizen-support.html">Support</a>
-  </div>
-  <div class="topnav-actions">
-    <span id="userNameDisplay" style="font-weight:500;margin-right:8px"></span>
-    <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
-  </div>
+  <a class="topnav-brand" href="/citizen.html"><span class="material-symbols-outlined">location_city</span>Lahore Smart City Watch</a>
+  <div class="topnav-links"><a href="/citizen.html" class="active">My Reports</a><a href="/emergency.html">Emergency</a><a href="/citizen-support.html">Support</a></div>
+  <div class="topnav-actions"><span id="userNameDisplay" style="font-weight:500;margin-right:8px"></span><button class="btn btn-outline btn-sm" onclick="logout()">Logout</button></div>
 </nav>
 
-<!-- MAIN DASHBOARD CONTAINER -->
 <div class="dashboard-container">
-  
-  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sidebar-header">
-      <div class="user-profile">
-        <div class="user-avatar" id="userAvatar">CA</div>
-        <div>
-          <h4 id="sidebarName" style="color:white;margin-bottom:2px;font-size:1rem;font-weight:700">Loading...</h4>
-          <p style="font-size:0.7rem;opacity:0.85">My Reports Dashboard</p>
-        </div>
-      </div>
-    </div>
-    <div class="sidebar-content" id="sidebarContent">
-      <div class="empty-state">
-        <span class="material-symbols-outlined" style="font-size:48px;opacity:0.25;margin-bottom:16px">assignment</span>
-        <p>Loading your reports...</p>
-      </div>
-    </div>
+    <div class="sidebar-header"><div class="user-profile"><div class="user-avatar" id="userAvatar">CA</div><div><h4 id="sidebarName" style="color:white;margin-bottom:2px;font-size:1rem;font-weight:700">Loading...</h4><p style="font-size:0.7rem;opacity:0.85">My Reports Dashboard</p></div></div></div>
+    <div class="sidebar-content" id="sidebarContent"><div class="empty-state"><span class="material-symbols-outlined" style="font-size:48px;opacity:0.25;margin-bottom:16px">assignment</span><p>Loading your reports...</p></div></div>
   </aside>
-
-  <!-- MAP SECTION - Properly Contained -->
-  <section class="map-section">
-    <div id="map"></div>
-  </section>
-
+  <section class="map-section"><div id="map"></div></section>
 </div>
 
-<!-- FAB BUTTON -->
-<button class="fab" id="fabReport">
-  <span class="material-symbols-outlined">edit_note</span>Report New Issue
-</button>
-<div class="map-hint" id="mapHint">
-  <span class="material-symbols-outlined">touch_app</span>Click on the map to pin location
-</div>
+<button class="fab" id="fabReport"><span class="material-symbols-outlined">edit_note</span>Report New Issue</button>
+<div class="map-hint" id="mapHint"><span class="material-symbols-outlined">touch_app</span>Click on the map to pin location</div>
 
-<!-- REPORT MODAL -->
 <div class="modal-overlay" id="reportModal">
   <div class="modal" style="max-width:550px">
-    <div class="modal-header">
-      <div class="modal-title">Report New Issue</div>
-      <button class="modal-close" onclick="closeModal('reportModal')"><span class="material-symbols-outlined">close</span></button>
-    </div>
+    <div class="modal-header"><div class="modal-title">Report New Issue</div><button class="modal-close" onclick="closeModal('reportModal')"><span class="material-symbols-outlined">close</span></button></div>
     <div class="modal-body">
-      <div style="background:#fef3c7;border:1px solid #d97706;border-radius:8px;padding:12px;margin-bottom:20px;display:flex;align-items:center;gap:8px">
-        <span class="material-symbols-outlined" style="color:#d97706">gavel</span>
-        <span style="font-size:0.8rem"><strong>Legal Notice:</strong> False reports are punishable under PPC Section 182.</span>
-      </div>
+      <div style="background:#fef3c7;border:1px solid #d97706;border-radius:8px;padding:12px;margin-bottom:20px;display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="color:#d97706">gavel</span><span style="font-size:0.8rem"><strong>Legal Notice:</strong> False reports are punishable under PPC Section 182.</span></div>
       <form id="reportForm" onsubmit="submitReport(event)">
         <div class="form-group"><label class="form-label">Location</label><div style="background:#f1f5f9;padding:12px;border-radius:8px;display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="color:#003f87">location_on</span><span id="locationDisplay">Click on map to select location</span></div></div>
         <div class="form-group"><label class="form-label">Category <span class="required">*</span></label><select class="form-select" id="reportCategory" required><option value="">Select category...</option><option value="Pothole">Pothole</option><option value="Waste">Waste</option><option value="Water Leak">Water Leak</option><option value="Street Light">Street Light</option><option value="Sewerage">Sewerage</option><option value="Encroachment">Encroachment</option><option value="Open Manhole">Open Manhole</option><option value="Other">Other</option></select></div>
@@ -287,18 +88,14 @@
 <script src="/static/storage.js"></script>
 <script src="/static/map.js"></script>
 <script>
-const session = LSCW.getSession();
-if (!session) window.location.href = '/';
+const session = LSCW.getSession(); if (!session) window.location.href = '/';
 let pendingLocation = null;
 document.getElementById('userNameDisplay').textContent = session.name;
 document.getElementById('sidebarName').textContent = session.name;
 document.getElementById('userAvatar').textContent = session.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
 document.getElementById('reportPhone').value = session.phone || '';
 
-function getCategoryIcon(cat) {
-  const icons = { 'Pothole': '🕳️', 'Waste': '🗑️', 'Water Leak': '💧', 'Street Light': '💡', 'Sewerage': '🚽', 'Encroachment': '🏗️', 'Open Manhole': '⚠️', 'Other': '📍' };
-  return icons[cat] || '📍';
-}
+function getCategoryIcon(cat) { const icons = { 'Pothole': '🕳️', 'Waste': '🗑️', 'Water Leak': '💧', 'Street Light': '💡', 'Sewerage': '🚽', 'Encroachment': '🏗️', 'Open Manhole': '⚠️', 'Other': '📍' }; return icons[cat] || '📍'; }
 
 function loadMyReports() {
   const reports = LSCW.getReportsByUser(session.userId).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -309,15 +106,7 @@ function loadMyReports() {
     const sl = { pending: 'PENDING', 'in-progress': 'IN PROGRESS', resolved: 'RESOLVED' };
     const sc = report.status === 'pending' ? 'pending' : report.status === 'resolved' ? 'resolved' : 'progress';
     const canSupport = report.status === 'resolved';
-    return `<div class="report-card" data-lat="${report.lat}" data-lng="${report.lng}">
-      <div class="report-card-header"><span class="report-id">${report.reportId}</span><span class="badge ${bs[report.status]}">${sl[report.status]}</span></div>
-      <div class="report-category"><span>${getCategoryIcon(report.category)}</span>${LSCW.sanitise(report.category)}</div>
-      <div class="report-desc">${LSCW.sanitise(report.description).substring(0,120)}${report.description.length>120?'...':''}</div>
-      <div class="report-meta"><span><span class="material-symbols-outlined" style="font-size:12px">location_on</span>${LSCW.sanitise(report.zone||'Lahore')}</span><span><span class="material-symbols-outlined" style="font-size:12px">schedule</span>${LSCW.timeAgo(report.createdAt)}</span></div>
-      <div class="status-row"><span class="status-dot ${sc}"></span><span class="status-text">${report.status==='pending'?'Awaiting Review':report.status==='in-progress'?'Being Processed':'Completed'}</span></div>
-      ${report.adminNotes?`<div class="admin-update"><strong>Admin Update</strong><br>${LSCW.sanitise(report.adminNotes)}</div>`:''}
-      <a href="/citizen-support.html" class="support-link ${!canSupport?'disabled':''}"><span class="material-symbols-outlined" style="font-size:14px">${canSupport?'support_agent':'lock'}</span> ${canSupport?'Open Support Ticket':'Support Available After Resolution'}</a>
-    </div>`;
+    return `<div class="report-card" data-lat="${report.lat}" data-lng="${report.lng}"><div class="report-card-header"><span class="report-id">${report.reportId}</span><span class="badge ${bs[report.status]}">${sl[report.status]}</span></div><div class="report-category"><span>${getCategoryIcon(report.category)}</span>${LSCW.sanitise(report.category)}</div><div class="report-desc">${LSCW.sanitise(report.description).substring(0,120)}${report.description.length>120?'...':''}</div><div class="report-meta"><span><span class="material-symbols-outlined" style="font-size:12px">location_on</span>${LSCW.sanitise(report.zone||'Lahore')}</span><span><span class="material-symbols-outlined" style="font-size:12px">schedule</span>${LSCW.timeAgo(report.createdAt)}</span></div><div class="status-row"><span class="status-dot ${sc}"></span><span class="status-text">${report.status==='pending'?'Awaiting Review':report.status==='in-progress'?'Being Processed':'Completed'}</span></div>${report.adminNotes?`<div class="admin-update"><strong>Admin Update</strong><br>${LSCW.sanitise(report.adminNotes)}</div>`:''}<a href="/citizen-support.html" class="support-link ${!canSupport?'disabled':''}"><span class="material-symbols-outlined" style="font-size:14px">${canSupport?'support_agent':'lock'}</span> ${canSupport?'Open Support Ticket':'Support Available After Resolution'}</a></div>`;
   }).join('');
   container.querySelectorAll('.report-card').forEach(card=>{card.addEventListener('click',()=>{if(window.LSCW_MAP)window.LSCW_MAP.setView([parseFloat(card.dataset.lat),parseFloat(card.dataset.lng)],16);});});
 }
@@ -329,26 +118,24 @@ document.getElementById('reportPhoto').addEventListener('change',function(e){con
 async function submitReport(e){
   e.preventDefault();
   if(!pendingLocation){showToast('Select location on map','error');return;}
-  const pf=document.getElementById('reportPhoto').files[0];
-  const fd=new FormData();
-  fd.append('category',document.getElementById('reportCategory').value);
-  fd.append('description',document.getElementById('reportDesc').value);
-  fd.append('latitude',pendingLocation.lat);fd.append('longitude',pendingLocation.lng);
+  const pf=document.getElementById('reportPhoto').files[0]; const fd=new FormData();
+  fd.append('category',document.getElementById('reportCategory').value); fd.append('description',document.getElementById('reportDesc').value);
+  fd.append('latitude',pendingLocation.lat); fd.append('longitude',pendingLocation.lng);
   fd.append('address',document.getElementById('reportAddress').value);
   fd.append('priority',document.querySelector('input[name="priority"]:checked').value);
-  fd.append('reporter_name',session.name);fd.append('reporter_email',session.email);
+  fd.append('reporter_name',session.name); fd.append('reporter_email',session.email);
   fd.append('reporter_phone',document.getElementById('reportPhone').value);
   if(pf)fd.append('photo',pf);
   const token=LSCW.getSession()?.accessToken;
   try{
-    const res=await fetch('http://127.0.0.1:8000/api/reports/',{method:'POST',headers:{'Authorization':token?`Bearer ${token}`:''},body:fd});
+    const res=await fetch('/api/reports/',{method:'POST',headers:{'Authorization':token?`Bearer ${token}`:''},body:fd});
     const report=await res.json();
     if(report.id){
       const lr={id:report.id,reportId:report.report_number,category:report.category,description:report.description,lat:parseFloat(report.latitude),lng:parseFloat(report.longitude),address:report.address||'',zone:report.zone||'Lahore',status:report.status,priority:report.priority,reportedBy:session.name,reporterEmail:session.email,reporterPhone:document.getElementById('reportPhone').value,reporterId:session.userId,createdAt:report.created_at,photo:report.photo||null,adminNotes:'',adminPhoto:null,estimatedResolution:null,resolutionDate:null};
       const reports=JSON.parse(localStorage.getItem('lscw_reports')||'[]');reports.push(lr);
       localStorage.setItem('lscw_reports',JSON.stringify(reports));
       if(window.addReportMarker)window.addReportMarker(lr);
-      showToast(`Report submitted!`,'success');
+      showToast('Report submitted!','success');
     }
   }catch(err){showToast('Error','error');}
   closeModal('reportModal');document.getElementById('reportForm').reset();

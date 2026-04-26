@@ -38,51 +38,11 @@ function timeAgo(d) { if (!d) return ''; const diff = Date.now() - new Date(d).g
 function generateReportId() { return 'LHR-' + Date.now().toString().slice(-8) + '-' + Math.floor(Math.random() * 1000).toString().padStart(3, '0'); }
 
 function getReports() { return JSON.parse(localStorage.getItem('lscw_reports') || '[]'); }
-
-function saveReport(report) { 
-    const reports = getReports(); 
-    report.id = Date.now().toString(36); 
-    report.reportId = report.reportId || generateReportId(); 
-    report.status = 'pending'; 
-    report.createdAt = new Date().toISOString(); 
-    report.zone = report.zone || 'Lahore'; 
-    report.adminNotes = ''; 
-    report.adminPhoto = null; 
-    report.estimatedResolution = null; 
-    report.resolutionDate = null; 
-    reports.push(report); 
-    localStorage.setItem('lscw_reports', JSON.stringify(reports)); 
-    const notifications = JSON.parse(localStorage.getItem('lscw_notifications') || '[]');
-    notifications.push({ id: Date.now().toString(36), userId: 'admin-001', title: 'New Report', message: `${report.category} reported by ${report.reportedBy}`, type: 'new_report', reportId: report.id, read: false, createdAt: new Date().toISOString() });
-    localStorage.setItem('lscw_notifications', JSON.stringify(notifications));
-    return report; 
-}
-
+function saveReport(report) { const reports = getReports(); report.id = Date.now().toString(36); report.reportId = report.reportId || generateReportId(); report.status = 'pending'; report.createdAt = new Date().toISOString(); report.zone = report.zone || 'Lahore'; report.adminNotes = ''; report.adminPhoto = null; report.estimatedResolution = null; report.resolutionDate = null; reports.push(report); localStorage.setItem('lscw_reports', JSON.stringify(reports)); const notif = JSON.parse(localStorage.getItem('lscw_notifications') || '[]'); notif.push({ id: Date.now().toString(36), userId: 'admin-001', title: 'New Report', message: `${report.category} by ${report.reportedBy}`, type: 'new_report', reportId: report.id, read: false, createdAt: new Date().toISOString() }); localStorage.setItem('lscw_notifications', JSON.stringify(notif)); return report; }
 function getReportsByUser(userId) { return getReports().filter(r => r.reporterId === userId); }
 function getReportsByUserEmail(email) { return getReports().filter(r => r.reporterEmail === email); }
 
-function updateReportStatus(id, status, data = {}) { 
-    const reports = getReports(); 
-    const idx = reports.findIndex(r => r.id === id); 
-    if (idx >= 0) { 
-        reports[idx].status = status; 
-        if (data.notes) reports[idx].adminNotes = data.notes; 
-        if (data.photo) reports[idx].adminPhoto = data.photo; 
-        if (data.estimatedResolution) reports[idx].estimatedResolution = data.estimatedResolution; 
-        if (status === 'resolved') reports[idx].resolutionDate = new Date().toISOString(); 
-        const sameCategory = reports.filter(r => r.category === reports[idx].category && r.status !== 'resolved'); 
-        if (sameCategory.length >= 3) { sameCategory.forEach(r => { if (r.priority !== 'urgent') r.priority = 'urgent'; }); } 
-        localStorage.setItem('lscw_reports', JSON.stringify(reports)); 
-        if (reports[idx].reporterId) {
-            const notifications = JSON.parse(localStorage.getItem('lscw_notifications') || '[]');
-            notifications.push({ id: Date.now().toString(36), userId: reports[idx].reporterId, title: 'Status Updated', message: `Your ${reports[idx].category} report is now ${status}`, type: 'status_update', reportId: id, read: false, createdAt: new Date().toISOString() });
-            localStorage.setItem('lscw_notifications', JSON.stringify(notifications));
-        }
-        return true; 
-    } 
-    return false; 
-}
-
+function updateReportStatus(id, status, data = {}) { const reports = getReports(); const idx = reports.findIndex(r => r.id === id); if (idx >= 0) { reports[idx].status = status; if (data.notes) reports[idx].adminNotes = data.notes; if (data.photo) reports[idx].adminPhoto = data.photo; if (data.estimatedResolution) reports[idx].estimatedResolution = data.estimatedResolution; if (status === 'resolved') reports[idx].resolutionDate = new Date().toISOString(); const sameCat = reports.filter(r => r.category === reports[idx].category && r.status !== 'resolved'); if (sameCat.length >= 3) { sameCat.forEach(r => { if (r.priority !== 'urgent') r.priority = 'urgent'; }); } localStorage.setItem('lscw_reports', JSON.stringify(reports)); if (reports[idx].reporterId) { const notif = JSON.parse(localStorage.getItem('lscw_notifications') || '[]'); notif.push({ id: Date.now().toString(36), userId: reports[idx].reporterId, title: 'Status Updated', message: `Your ${reports[idx].category} report is now ${status}`, type: 'status_update', reportId: id, read: false, createdAt: new Date().toISOString() }); localStorage.setItem('lscw_notifications', JSON.stringify(notif)); } return true; } return false; }
 function getReportById(id) { return getReports().find(r => r.id === id); }
 
 function getZones() { return [{ id: 'gulberg', name: 'Gulberg', areas: ['Gulberg II', 'Gulberg III', 'Main Boulevard', 'Liberty', 'MM Alam Road'] }, { id: 'johar', name: 'Johar Town', areas: ['Block A', 'Block G', 'Block R', 'Expo Centre'] }, { id: 'dha', name: 'DHA', areas: ['Phase 1', 'Phase 5', 'Phase 6', 'Phase 8'] }, { id: 'modeltown', name: 'Model Town', areas: ['A Block', 'B Block', 'C Block', 'D Block'] }, { id: 'iqbal', name: 'Iqbal Town', areas: ['Township', 'Punjab Society', 'Pak Arab Society'] }, { id: 'cantt', name: 'Cantt', areas: ['Saddar', 'Garrison', 'Askari', 'Fortress'] }, { id: 'walled', name: 'Walled City', areas: ['Androon Lahore', 'Delhi Gate', 'Bhati Gate'] }, { id: 'faisal', name: 'Faisal Town', areas: ['Faisal Town', 'Canal Road', 'Muslim Town'] }, { id: 'garden', name: 'Garden Town', areas: ['Garden Town', 'Kalma Chowk', 'Mozang'] }, { id: 'shadman', name: 'Shadman', areas: ['Shadman Colony', 'Jail Road', 'Mall Road'] }]; }
@@ -107,13 +67,7 @@ function canCreateTicket(reportId) { return true; }
 function isRateLimited() { return false; }
 function recordAttempt() { }
 
-function showToast(msg, type = 'info') {
-  const tc = document.getElementById('toast-container'); if (!tc) { const c = document.createElement('div'); c.id = 'toast-container'; document.body.appendChild(c); }
-  const t = document.createElement('div'); t.className = `toast toast-${type}`;
-  t.innerHTML = `<span class="material-symbols-outlined">${type==='success'?'check_circle':type==='error'?'error':'info'}</span> ${msg}`;
-  document.getElementById('toast-container').appendChild(t);
-  setTimeout(() => { t.classList.add('removing'); setTimeout(() => { if (t.parentNode) t.remove(); }, 300); }, 4000);
-}
+function showToast(msg, type = 'info') { const tc = document.getElementById('toast-container'); if (!tc) { const c = document.createElement('div'); c.id = 'toast-container'; document.body.appendChild(c); } const t = document.createElement('div'); t.className = `toast toast-${type}`; t.innerHTML = `<span class="material-symbols-outlined">${type==='success'?'check_circle':type==='error'?'error':'info'}</span> ${msg}`; document.getElementById('toast-container').appendChild(t); setTimeout(() => { t.classList.add('removing'); setTimeout(() => { if (t.parentNode) t.remove(); }, 300); }, 4000); }
 window.showToast = showToast;
 
 window.LSCW = { loginUser, registerUser, loginAdmin, setSession, getSession, clearSession, simulateSendOTP, verifyOTP, markUserVerified, getReports, saveReport, getReportsByUser, getReportsByUserEmail, updateReportStatus, getReportById, getReportByReportId: getReportById, getZones, getZoneByCoordinates, getZoneByName: (n) => getZones().find(z => z.name === n), getReportsByZone, getNotifications, getAllNotifications, getUnreadCount, markAllNotificationsRead, markNotificationRead, createNotification, getTickets, getTicketsByUser, getAllTickets, createTicket, addTicketReply, getTicketById, updateTicketStatus, canCreateTicket, isRateLimited, recordAttempt, sanitise, formatDate, timeAgo, generateReportId };

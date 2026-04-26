@@ -14,16 +14,13 @@ function initMap() {
   map = L.map('map', { zoomControl: false, maxZoom: 19, minZoom: 10 }).setView([31.5204, 74.3587], 13);
   window.LSCW_MAP = map;
   
-  // CartoDB tiles - Free, no block, with labels
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CARTO',
     subdomains: 'abcd',
     maxZoom: 19
   }).addTo(map);
   
-  // Zoom control bottom-right
   L.control.zoom({ position: 'bottomright' }).addTo(map);
-  
   markerLayer = L.layerGroup().addTo(map);
   
   const categoryColors = { 'Pothole': '#dc2626', 'Waste': '#475569', 'Water Leak': '#2563eb', 'Street Light': '#d97706', 'Sewerage': '#0891b2', 'Encroachment': '#ea580c', 'Open Manhole': '#1e40af', 'Other': '#64748b' };

@@ -46,7 +46,7 @@
     .auth-form.hidden { display: none; }
     .forgot-link { display: block; text-align: right; margin-top: 4px; margin-bottom: 16px; font-size: 0.75rem; color: var(--c-primary); font-weight: 500; cursor: pointer; }
     .modal-close { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.15); border: none; width: 32px; height: 32px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    @media (max-width: 768px) { .stats-grid-home { grid-template-columns: repeat(2, 1fr); } .hero-title { font-size: 2.5rem; } }
+    @media (max-width: 768px) { .stats-grid-home { grid-template-columns: repeat(2, 1fr); } .hero-title { font-size: 2rem; } .hero-subtitle { font-size: 1rem; } .feature-section { padding: 40px 0; } .cta-section { padding: 40px 0; } }
   </style>
 </head>
 <body>
@@ -66,11 +66,11 @@
           <h1 class="hero-title">Building a Smarter,<br><span style="color:var(--c-primary)">Safer Lahore</span></h1>
           <p class="hero-subtitle">Report infrastructure issues, track civic services, and visualize real-time district intelligence through our comprehensive GIS framework.</p>
           <div style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn btn-primary btn-lg" id="heroGetStarted"><span class="material-symbols-outlined">rocket_launch</span>Get Started</button><a href="/emergency.html" class="btn btn-outline btn-lg" style="border-color:var(--c-danger);color:var(--c-danger)"><span class="material-symbols-outlined">emergency</span>Emergency</a></div>
-          <div class="legal-banner"><div style="display:flex;align-items:center;gap:12px"><span class="material-symbols-outlined" style="color:var(--c-warning);font-size:28px">gavel</span><div><strong style="color:var(--c-warning)">⚠️ Legal Warning</strong><p style="font-size:0.85rem;color:var(--c-text-secondary);margin-top:4px">Filing false reports is a punishable offense under Section 182 PPC. All reports are logged with phone numbers for verification.</p></div></div></div>
+          <div class="legal-banner"><div style="display:flex;align-items:center;gap:12px"><span class="material-symbols-outlined" style="color:var(--c-warning);font-size:28px">gavel</span><div><strong style="color:var(--c-warning)">⚠️ Legal Warning</strong><p style="font-size:0.85rem;color:var(--c-text-secondary);margin-top:4px">Filing false reports is a punishable offense under Section 182 PPC.</p></div></div></div>
         </div>
         <div style="flex:1;min-width:300px">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="stat-card"><div class="stat-number" id="homeActiveReports">0</div><div class="stat-label">Active Reports</div><div class="stat-trend"><span class="material-symbols-outlined" style="font-size:14px">trending_up</span>Updated real-time</div></div><div class="stat-card"><div class="stat-number" id="homeResolvedReports">0</div><div class="stat-label">Issues Resolved</div><div class="stat-trend"><span class="material-symbols-outlined" style="font-size:14px">check_circle</span>This month</div></div></div>
-          <div style="margin-top:16px"><div class="stat-card"><div style="display:flex;align-items:center;gap:16px"><div><div class="stat-number" id="homeZonesCount">10</div><div class="stat-label">Lahore Zones</div></div><div style="width:1px;height:50px;background:var(--c-border)"></div><div><div class="stat-number" id="homeCitizensCount">0</div><div class="stat-label">Active Citizens</div></div></div></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="stat-card"><div class="stat-number" id="homeActiveReports">0</div><div class="stat-label">Active Reports</div></div><div class="stat-card"><div class="stat-number" id="homeResolvedReports">0</div><div class="stat-label">Issues Resolved</div></div></div>
+          <div style="margin-top:16px"><div class="stat-card"><div style="display:flex;align-items:center;gap:16px"><div><div class="stat-number" id="homeZonesCount">10</div><div class="stat-label">Lahore Zones</div></div><div><div class="stat-number" id="homeCitizensCount">0</div><div class="stat-label">Active Citizens</div></div></div></div></div>
         </div>
       </div>
     </div>
@@ -81,22 +81,22 @@
       <h2 class="section-title">How It Works</h2>
       <p class="section-subtitle">Three simple steps to improve your city</p>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
-        <div class="feature-card"><div class="feature-icon"><span class="material-symbols-outlined icon-filled">location_on</span></div><h3 class="feature-title">1. Pin the Issue</h3><p class="feature-desc">Click anywhere on the interactive map to report infrastructure problems with precise GPS coordinates.</p></div>
-        <div class="feature-card"><div class="feature-icon"><span class="material-symbols-outlined icon-filled">description</span></div><h3 class="feature-title">2. Submit Report</h3><p class="feature-desc">Add category, description, and optional photos. Your report enters our spatial database instantly with a unique tracking ID.</p></div>
-        <div class="feature-card"><div class="feature-icon"><span class="material-symbols-outlined icon-filled">verified</span></div><h3 class="feature-title">3. Track Resolution</h3><p class="feature-desc">Monitor status updates from Pending → In Progress → Resolved. Receive notifications when your issue is addressed.</p></div>
+        <div class="feature-card"><div class="feature-icon"><span class="material-symbols-outlined icon-filled">location_on</span></div><h3 class="feature-title">1. Pin the Issue</h3><p class="feature-desc">Click anywhere on the interactive map to report infrastructure problems.</p></div>
+        <div class="feature-card"><div class="feature-icon"><span class="material-symbols-outlined icon-filled">description</span></div><h3 class="feature-title">2. Submit Report</h3><p class="feature-desc">Add category, description, and photos. Get a unique tracking ID instantly.</p></div>
+        <div class="feature-card"><div class="feature-icon"><span class="material-symbols-outlined icon-filled">verified</span></div><h3 class="feature-title">3. Track Resolution</h3><p class="feature-desc">Monitor status from Pending → In Progress → Resolved with notifications.</p></div>
       </div>
     </div>
   </section>
 
   <section class="stats-section">
-    <div class="container"><div class="stats-grid-home"><div class="stat-item"><div class="stat-item-value" id="statsTotalReports">0</div><div class="stat-item-label">Total Reports</div></div><div class="stat-item"><div class="stat-item-value" id="statsPendingReports">0</div><div class="stat-item-label">Pending</div></div><div class="stat-item"><div class="stat-item-value" id="statsResolvedReports">0</div><div class="stat-item-label">Resolved</div></div><div class="stat-item"><div class="stat-item-value" id="statsAvgResponse">0</div><div class="stat-item-label">Avg Response (days)</div></div></div></div>
+    <div class="container"><div class="stats-grid-home"><div class="stat-item"><div class="stat-item-value" id="statsTotalReports">0</div><div class="stat-item-label">Total Reports</div></div><div class="stat-item"><div class="stat-item-value" id="statsPendingReports">0</div><div class="stat-item-label">Pending</div></div><div class="stat-item"><div class="stat-item-value" id="statsResolvedReports">0</div><div class="stat-item-label">Resolved</div></div><div class="stat-item"><div class="stat-item-value" id="statsAvgResponse">0</div><div class="stat-item-label">Avg Response</div></div></div></div>
   </section>
 
   <section class="cta-section">
     <div class="container">
       <h2 class="cta-title">Ready to Make Lahore Better?</h2>
       <p class="cta-subtitle">Join thousands of citizens actively reporting and tracking civic issues.</p>
-      <div style="display:flex;gap:16px;justify-content:center"><button class="btn btn-primary btn-lg" id="ctaSignupBtn" style="background:white;color:var(--c-primary)"><span class="material-symbols-outlined">person_add</span>Create Free Account</button><button class="btn btn-outline btn-lg" id="ctaLearnMore" style="border-color:white;color:white"><span class="material-symbols-outlined">info</span>Learn More</button></div>
+      <div style="display:flex;gap:16px;justify-content:center"><button class="btn btn-primary btn-lg" id="ctaSignupBtn" style="background:white;color:var(--c-primary)"><span class="material-symbols-outlined">person_add</span>Create Free Account</button></div>
     </div>
   </section>
 </main>
@@ -104,26 +104,25 @@
 <footer style="background:var(--c-primary-dark);color:white;padding:48px 0 24px">
   <div class="container">
     <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;margin-bottom:32px">
-      <div><h4 style="font-family:var(--ff-head);font-weight:700;margin-bottom:16px">Lahore Smart City Watch</h4><p style="opacity:0.8;font-size:0.875rem;line-height:1.6">A GIS-based urban intelligence framework for civic engagement and infrastructure monitoring across Lahore.</p></div>
-      <div><h5 style="font-weight:600;margin-bottom:16px">Quick Links</h5><ul style="list-style:none;opacity:0.8;font-size:0.875rem"><li style="margin-bottom:10px"><a href="/citizen.html">Citizen Portal</a></li><li style="margin-bottom:10px"><a href="/emergency.html">Emergency Report</a></li><li style="margin-bottom:10px"><a href="/about.html">About Us</a></li></ul></div>
-      <div><h5 style="font-weight:600;margin-bottom:16px">Emergency Numbers</h5><ul style="list-style:none;opacity:0.8;font-size:0.875rem"><li style="margin-bottom:10px">Rescue: 1122</li><li style="margin-bottom:10px">Police: 15</li><li style="margin-bottom:10px">Fire: 16</li><li style="margin-bottom:10px">WASA: 042-99332010</li></ul></div>
-      <div><h5 style="font-weight:600;margin-bottom:16px">Contact</h5><ul style="list-style:none;opacity:0.8;font-size:0.875rem"><li style="margin-bottom:10px">Email: info@lscw.pk</li><li style="margin-bottom:10px">Phone: +92 42 99201111</li><li style="margin-bottom:10px">Address: Gulberg III, Lahore</li></ul></div>
+      <div><h4>Lahore Smart City Watch</h4><p style="opacity:0.8;font-size:0.875rem">GIS-based urban intelligence framework for Lahore.</p></div>
+      <div><h5>Quick Links</h5><ul style="list-style:none;opacity:0.8;font-size:0.875rem"><li><a href="/citizen.html">Citizen Portal</a></li><li><a href="/emergency.html">Emergency</a></li><li><a href="/about.html">About Us</a></li></ul></div>
+      <div><h5>Emergency</h5><ul style="list-style:none;opacity:0.8;font-size:0.875rem"><li>Rescue: 1122</li><li>Police: 15</li><li>Fire: 16</li></ul></div>
+      <div><h5>Contact</h5><ul style="list-style:none;opacity:0.8;font-size:0.875rem"><li>Email: info@lscw.pk</li><li>CGIS, PU Lahore</li></ul></div>
     </div>
-    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:24px;text-align:center;font-size:0.75rem;opacity:0.6">© 2024 Lahore Smart City Watch — GIS-Based Urban Intelligence Framework | Final Year Project | Department of GIS</div>
+    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:24px;text-align:center;font-size:0.75rem;opacity:0.6">© 2026 Lahore Smart City Watch — FYP | CGIS, University of the Punjab</div>
   </div>
 </footer>
 
 <div class="modal-overlay" id="authModal">
   <div class="modal">
-    <div class="modal-header"><div style="font-size:1.5rem;font-weight:700" id="modalTitle">Sign In</div><div style="font-size:0.875rem;opacity:0.9" id="modalSubtitle">Access your account</div><button class="modal-close" onclick="closeModal('authModal')"><span class="material-symbols-outlined">close</span></button></div>
+    <div class="modal-header"><div style="font-size:1.5rem;font-weight:700" id="modalTitle">Sign In</div><button class="modal-close" onclick="closeModal('authModal')"><span class="material-symbols-outlined">close</span></button></div>
     <div class="modal-body">
       <div class="auth-tabs"><div class="auth-tab active" data-tab="login">Sign In</div><div class="auth-tab" data-tab="signup">Create Account</div></div>
       <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
-        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" placeholder="citizen@demo.com" required></div>
-        <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required></div>
+        <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" required></div>
+        <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="loginPassword" required></div>
         <a href="#" class="forgot-link" onclick="openForgotPassword()">Forgot Password?</a>
         <button type="submit" class="btn btn-primary w-full btn-lg">Sign In</button>
-        <p style="text-align:center;margin-top:16px;font-size:0.8rem;color:var(--c-text-muted)">Demo: citizen@demo.com / demo12345</p>
       </form>
       <form id="signupForm" class="auth-form hidden" onsubmit="handleSignup(event)">
         <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="signupName" required></div>
@@ -133,7 +132,7 @@
         <div class="form-group"><label class="form-label">Confirm Password</label><input type="password" class="form-input" id="signupConfirm" required></div>
         <button type="submit" class="btn btn-primary w-full btn-lg">Create Account</button>
       </form>
-      <p style="text-align:center;margin-top:16px;font-size:0.8rem"><span id="footerText">Don't have an account?</span><a href="#" id="switchTabLink" style="color:var(--c-primary);font-weight:600;margin-left:4px">Create one</a></p>
+      <p style="text-align:center;margin-top:16px;font-size:0.8rem"><span id="footerText">Don't have an account?</span><a href="#" id="switchTabLink" style="color:var(--c-primary);font-weight:600">Create one</a></p>
     </div>
   </div>
 </div>
@@ -141,7 +140,7 @@
 <div class="modal-overlay" id="otpModal">
   <div class="modal">
     <div class="modal-header"><div style="font-size:1.5rem;font-weight:700">Verify Email</div><button class="modal-close" onclick="closeModal('otpModal')"><span class="material-symbols-outlined">close</span></button></div>
-    <div class="modal-body"><p style="text-align:center;margin-bottom:20px">Code sent to <strong id="otpEmail"></strong></p><input type="text" id="otpInput" style="width:100%;padding:14px;border:1.5px solid #cbd5e1;border-radius:10px;text-align:center;font-size:1.5rem;letter-spacing:8px" placeholder="000000" maxlength="6"><button onclick="verifyOTP()" class="btn btn-primary w-full btn-lg" style="margin-top:20px">Verify</button></div>
+    <div class="modal-body"><p>Code sent to <strong id="otpEmail"></strong></p><input type="text" id="otpInput" style="width:100%;padding:14px;border:1.5px solid #cbd5e1;border-radius:10px;text-align:center;font-size:1.5rem;letter-spacing:8px" placeholder="000000" maxlength="6"><button onclick="verifyOTP()" class="btn btn-primary w-full btn-lg" style="margin-top:20px">Verify</button></div>
   </div>
 </div>
 
@@ -149,9 +148,9 @@
   <div class="modal">
     <div class="modal-header"><div style="font-size:1.25rem;font-weight:700">Reset Password</div><button class="modal-close" onclick="closeModal('forgotPasswordModal')"><span class="material-symbols-outlined">close</span></button></div>
     <div class="modal-body">
-      <div id="forgotStep1"><p style="margin-bottom:16px;color:var(--c-text-secondary);font-size:0.9rem">Enter your email to receive a password reset OTP.</p><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="forgotEmail" required></div><button class="btn btn-primary w-full" onclick="sendResetOTP()">Send OTP</button></div>
-      <div id="forgotStep2" style="display:none"><p style="margin-bottom:16px">Enter the 6-digit code sent to <strong id="forgotEmailDisplay"></strong></p><div class="form-group"><label class="form-label">OTP Code</label><input type="text" class="form-input" id="forgotOTP" maxlength="6"></div><button class="btn btn-primary w-full" onclick="verifyResetOTP()">Verify OTP</button></div>
-      <div id="forgotStep3" style="display:none"><p style="margin-bottom:16px">Enter your new password.</p><div class="form-group"><label class="form-label">New Password</label><input type="password" class="form-input" id="newPassword" minlength="8"></div><div class="form-group"><label class="form-label">Confirm Password</label><input type="password" class="form-input" id="confirmNewPassword"></div><button class="btn btn-primary w-full" onclick="resetUserPassword()">Reset Password</button></div>
+      <div id="forgotStep1"><p style="margin-bottom:16px">Enter your email to receive OTP.</p><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="forgotEmail" required></div><button class="btn btn-primary w-full" onclick="sendResetOTP()">Send OTP</button></div>
+      <div id="forgotStep2" style="display:none"><p>Enter OTP sent to <strong id="forgotEmailDisplay"></strong></p><div class="form-group"><label class="form-label">OTP</label><input type="text" class="form-input" id="forgotOTP" maxlength="6"></div><button class="btn btn-primary w-full" onclick="verifyResetOTP()">Verify</button></div>
+      <div id="forgotStep3" style="display:none"><p>Enter new password.</p><div class="form-group"><label class="form-label">New Password</label><input type="password" class="form-input" id="newPassword" minlength="8"></div><div class="form-group"><label class="form-label">Confirm</label><input type="password" class="form-input" id="confirmNewPassword"></div><button class="btn btn-primary w-full" onclick="resetUserPassword()">Reset Password</button></div>
     </div>
   </div>
 </div>
@@ -160,130 +159,99 @@
 
 <script src="/static/storage.js"></script>
 <script>
-const session = LSCW.getSession();
-if (session) window.location.href = '/citizen.html';
-
-const authModal = document.getElementById('authModal');
-const otpModal = document.getElementById('otpModal');
-let pendingEmail = '';
-let currentOTP = '';
-let resetEmail = '';
-let resetToken = '';
+const session = LSCW.getSession(); if (session) window.location.href = '/citizen.html';
+let pendingEmail = '', currentOTP = '', resetEmail = '', resetToken = '';
+function $(id) { return document.getElementById(id); }
 
 function loadHomeStats() {
-  const reports = LSCW.getReports();
-  const zones = LSCW.getZones();
-  const users = JSON.parse(localStorage.getItem('lscw_users') || '[]');
-  document.getElementById('homeActiveReports').textContent = reports.filter(r => r.status !== 'resolved').length;
-  document.getElementById('homeResolvedReports').textContent = reports.filter(r => r.status === 'resolved').length;
-  document.getElementById('homeZonesCount').textContent = zones.length;
-  document.getElementById('homeCitizensCount').textContent = users.length;
-  document.getElementById('statsTotalReports').textContent = reports.length;
-  document.getElementById('statsPendingReports').textContent = reports.filter(r => r.status === 'pending').length;
-  document.getElementById('statsResolvedReports').textContent = reports.filter(r => r.status === 'resolved').length;
+  const reports = LSCW.getReports(), zones = LSCW.getZones();
+  $('homeActiveReports').textContent = reports.filter(r => r.status !== 'resolved').length;
+  $('homeResolvedReports').textContent = reports.filter(r => r.status === 'resolved').length;
+  $('homeZonesCount').textContent = zones.length;
+  $('homeCitizensCount').textContent = JSON.parse(localStorage.getItem('lscw_users') || '[]').length;
+  $('statsTotalReports').textContent = reports.length;
+  $('statsPendingReports').textContent = reports.filter(r => r.status === 'pending').length;
+  $('statsResolvedReports').textContent = reports.filter(r => r.status === 'resolved').length;
 }
 loadHomeStats();
 
-document.getElementById('loginBtn').addEventListener('click', () => openAuthModal('login'));
-document.getElementById('signupBtn').addEventListener('click', () => openAuthModal('signup'));
-document.getElementById('heroGetStarted').addEventListener('click', () => openAuthModal('signup'));
-document.getElementById('ctaSignupBtn').addEventListener('click', () => openAuthModal('signup'));
-document.getElementById('ctaLearnMore').addEventListener('click', () => window.location.href = '/about.html');
+$('loginBtn').addEventListener('click', () => openAuthModal('login'));
+$('signupBtn').addEventListener('click', () => openAuthModal('signup'));
+$('heroGetStarted').addEventListener('click', () => openAuthModal('signup'));
+$('ctaSignupBtn').addEventListener('click', () => openAuthModal('signup'));
 
-function openModal(id) { document.getElementById(id).classList.add('active'); }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-function openAuthModal(tab) { authModal.classList.add('active'); switchTab(tab); }
+function openModal(id) { $(id).classList.add('active'); }
+function closeModal(id) { $(id).classList.remove('active'); }
+function openAuthModal(tab) { openModal('authModal'); switchTab(tab); }
 
 function switchTab(tab) {
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
   document.querySelector(`.auth-tab[data-tab="${tab}"]`).classList.add('active');
-  document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
-  document.getElementById('signupForm').classList.toggle('hidden', tab !== 'signup');
-  document.getElementById('modalTitle').textContent = tab === 'login' ? 'Sign In' : 'Create Account';
-  document.getElementById('modalSubtitle').textContent = tab === 'login' ? 'Access your account' : 'Join Lahore Smart City Watch';
-  document.getElementById('footerText').textContent = tab === 'login' ? "Don't have an account?" : 'Already have an account?';
-  document.getElementById('switchTabLink').textContent = tab === 'login' ? 'Create one' : 'Sign in';
+  $('loginForm').classList.toggle('hidden', tab !== 'login');
+  $('signupForm').classList.toggle('hidden', tab !== 'signup');
+  $('modalTitle').textContent = tab === 'login' ? 'Sign In' : 'Create Account';
+  $('footerText').textContent = tab === 'login' ? "Don't have an account?" : 'Already have an account?';
+  $('switchTabLink').textContent = tab === 'login' ? 'Create one' : 'Sign in';
 }
 
 document.querySelectorAll('.auth-tab').forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
-document.getElementById('switchTabLink').addEventListener('click', e => { e.preventDefault(); switchTab(document.querySelector('.auth-tab.active').dataset.tab === 'login' ? 'signup' : 'login'); });
+$('switchTabLink').addEventListener('click', e => { e.preventDefault(); switchTab(document.querySelector('.auth-tab.active').dataset.tab === 'login' ? 'signup' : 'login'); });
 document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('active'); }));
 
 function showToast(msg, type) {
-  const tc = document.getElementById('toast-container');
-  const t = document.createElement('div');
-  t.className = `toast toast-${type}`;
-  t.innerHTML = `<span class="material-symbols-outlined">${type==='success'?'check_circle':type==='error'?'error':'info'}</span> ${msg}`;
+  const tc = $('toast-container'); const t = document.createElement('div');
+  t.className = `toast toast-${type}`; t.innerHTML = `<span class="material-symbols-outlined">${type==='success'?'check_circle':type==='error'?'error':'info'}</span> ${msg}`;
   tc.appendChild(t); setTimeout(() => { t.classList.add('removing'); setTimeout(() => t.remove(), 300); }, 4000);
 }
 
 async function handleLogin(e) {
   e.preventDefault();
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
-  if (!email || !password) { showToast('Please fill all fields', 'error'); return; }
-  const result = await LSCW.loginUser(email, password);
+  const result = await LSCW.loginUser($('loginEmail').value, $('loginPassword').value);
   if (result.ok) { showToast('Login successful!', 'success'); setTimeout(() => window.location.href = '/citizen.html', 500); }
   else { showToast(result.error, 'error'); }
 }
 
 async function handleSignup(e) {
   e.preventDefault();
-  const name = document.getElementById('signupName').value;
-  const email = document.getElementById('signupEmail').value;
-  const phone = document.getElementById('signupPhone').value;
-  const password = document.getElementById('signupPassword').value;
-  const confirm = document.getElementById('signupConfirm').value;
-  if (password !== confirm) { showToast('Passwords do not match', 'error'); return; }
-  const result = await LSCW.registerUser({ name, email, phone, password });
+  if ($('signupPassword').value !== $('signupConfirm').value) { showToast('Passwords do not match', 'error'); return; }
+  const result = await LSCW.registerUser({ name: $('signupName').value, email: $('signupEmail').value, phone: $('signupPhone').value, password: $('signupPassword').value });
   if (result.ok) {
-    pendingEmail = email; currentOTP = LSCW.simulateSendOTP(email);
-    document.getElementById('otpEmail').textContent = email;
-    closeModal('authModal'); otpModal.classList.add('active');
+    pendingEmail = result.email; currentOTP = LSCW.simulateSendOTP(result.email);
+    $('otpEmail').textContent = result.email; closeModal('authModal'); openModal('otpModal');
     showToast('OTP sent! Check console', 'info');
   } else { showToast(result.error, 'error'); }
 }
 
-function verifyOTP() { closeModal('otpModal'); showToast('Email verified! Please login.', 'success'); setTimeout(() => openAuthModal('login'), 500); }
+function verifyOTP() { closeModal('otpModal'); showToast('Email verified!', 'success'); setTimeout(() => openAuthModal('login'), 500); }
 
-function openForgotPassword() {
-  closeModal('authModal');
-  document.getElementById('forgotStep1').style.display = 'block';
-  document.getElementById('forgotStep2').style.display = 'none';
-  document.getElementById('forgotStep3').style.display = 'none';
-  openModal('forgotPasswordModal');
-}
+function openForgotPassword() { closeModal('authModal'); $('forgotStep1').style.display='block'; $('forgotStep2').style.display='none'; $('forgotStep3').style.display='none'; openModal('forgotPasswordModal'); }
 
 async function sendResetOTP() {
-  const email = document.getElementById('forgotEmail').value;
-  if (!email) { showToast('Please enter your email', 'error'); return; }
+  const email = $('forgotEmail').value; if (!email) { showToast('Enter email', 'error'); return; }
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/auth/forgot-password/`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({email}) });
+    const res = await fetch('/api/auth/forgot-password/', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email}) });
     const data = await res.json();
-    if (data.message) { resetEmail = email; document.getElementById('forgotEmailDisplay').textContent = email; document.getElementById('forgotStep1').style.display = 'none'; document.getElementById('forgotStep2').style.display = 'block'; showToast('OTP sent!', 'success'); }
+    if (data.message) { resetEmail = email; $('forgotEmailDisplay').textContent = email; $('forgotStep1').style.display='none'; $('forgotStep2').style.display='block'; showToast('OTP sent!', 'success'); }
     else { showToast(data.error, 'error'); }
   } catch(e) { showToast('Network error', 'error'); }
 }
 
 async function verifyResetOTP() {
-  const otp = document.getElementById('forgotOTP').value;
-  if (!otp) { showToast('Please enter OTP', 'error'); return; }
+  const otp = $('forgotOTP').value; if (!otp) { showToast('Enter OTP', 'error'); return; }
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/auth/verify-reset-otp/`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({email: resetEmail, otp}) });
+    const res = await fetch('/api/auth/verify-reset-otp/', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:resetEmail, otp}) });
     const data = await res.json();
-    if (data.reset_token) { resetToken = data.reset_token; document.getElementById('forgotStep2').style.display = 'none'; document.getElementById('forgotStep3').style.display = 'block'; showToast('OTP verified!', 'success'); }
+    if (data.reset_token) { resetToken = data.reset_token; $('forgotStep2').style.display='none'; $('forgotStep3').style.display='block'; showToast('Verified!', 'success'); }
     else { showToast(data.error, 'error'); }
   } catch(e) { showToast('Network error', 'error'); }
 }
 
 async function resetUserPassword() {
-  const np = document.getElementById('newPassword').value;
-  const cp = document.getElementById('confirmNewPassword').value;
-  if (np !== cp) { showToast('Passwords do not match', 'error'); return; }
+  if ($('newPassword').value !== $('confirmNewPassword').value) { showToast('Passwords do not match', 'error'); return; }
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/auth/reset-password/`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({email: resetEmail, reset_token: resetToken, new_password: np}) });
+    const res = await fetch('/api/auth/reset-password/', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:resetEmail, reset_token:resetToken, new_password:$('newPassword').value}) });
     const data = await res.json();
-    if (data.message) { closeModal('forgotPasswordModal'); showToast('Password reset! Please login.', 'success'); setTimeout(() => openAuthModal('login'), 500); }
+    if (data.message) { closeModal('forgotPasswordModal'); showToast('Password reset! Login now.', 'success'); setTimeout(() => openAuthModal('login'), 500); }
     else { showToast(data.error, 'error'); }
   } catch(e) { showToast('Network error', 'error'); }
 }

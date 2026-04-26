@@ -11,69 +11,25 @@
     .team-card { background: white; border-radius: 16px; padding: 24px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
     .team-avatar { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #003f87, #0056b3); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: white; font-size: 2rem; font-weight: 700; }
     .contact-card { background: #f1f5f9; border-radius: 16px; padding: 24px; text-align: center; }
+    @media (max-width: 768px) { .about-hero { padding: 100px 0 40px; } }
   </style>
 </head>
 <body>
 
 <nav class="topnav">
   <a class="topnav-brand" href="/"><span class="material-symbols-outlined" style="color:#003f87">location_city</span>Lahore Smart City Watch</a>
-  <div class="topnav-links">
-    <a href="/">Home</a>
-    <a href="/citizen.html">My Reports</a>
-    <a href="/emergency.html">Emergency</a>
-    <a href="/about.html" class="active">About Us</a>
-  </div>
-  <div class="topnav-actions">
-    <button class="btn btn-outline btn-sm" onclick="window.location.href='/'">Sign In</button>
-  </div>
+  <div class="topnav-links"><a href="/">Home</a><a href="/citizen.html">My Reports</a><a href="/emergency.html">Emergency</a><a href="/about.html" class="active">About Us</a></div>
+  <div class="topnav-actions"><button class="btn btn-outline btn-sm" onclick="window.location.href='/'">Sign In</button></div>
 </nav>
 
-<section class="about-hero">
-  <div class="container text-center">
-    <h1 style="font-weight:800;font-size:2.5rem;margin-bottom:16px">About Lahore Smart City Watch</h1>
-    <p style="font-size:1.125rem;opacity:0.9;max-width:800px;margin:0 auto">A GIS-based urban intelligence framework developed as a Final Year Project by students of Geographical Information System.</p>
-  </div>
-</section>
+<section class="about-hero"><div class="container text-center"><h1 style="font-weight:800;font-size:2.5rem;margin-bottom:16px">About Lahore Smart City Watch</h1><p style="font-size:1.125rem;opacity:0.9;max-width:800px;margin:0 auto">A GIS-based urban intelligence framework developed as a Final Year Project by students of Geographical Information System.</p></div></section>
 
-<section style="padding:60px 0">
-  <div class="container">
-    <div style="max-width:800px;margin:0 auto">
-      <h2 style="font-weight:700;font-size:2rem;margin-bottom:24px">Our Mission</h2>
-      <p style="font-size:1.125rem;color:#475569;line-height:1.8;margin-bottom:48px">Lahore Smart City Watch aims to bridge the gap between citizens and urban management authorities through real-time geospatial intelligence. Our platform enables citizens to report infrastructure issues, track resolution progress, and access critical emergency services, all powered by GIS technology.</p>
-      <h2 style="font-weight:700;font-size:2rem;margin-bottom:24px">The Role of GIS</h2>
-      <p style="font-size:1.125rem;color:#475569;line-height:1.8;margin-bottom:48px">Geographic Information Systems (GIS) form the backbone of our platform. Every report is geotagged with precise coordinates, enabling spatial analysis of urban issues. This data-driven approach helps identify patterns, allocate resources efficiently, and make informed decisions for urban development and disaster management.</p>
-    </div>
-  </div>
-</section>
+<section style="padding:60px 0"><div class="container"><div style="max-width:800px;margin:0 auto"><h2 style="font-weight:700;font-size:2rem;margin-bottom:24px">Our Mission</h2><p style="font-size:1.125rem;color:#475569;line-height:1.8;margin-bottom:48px">Lahore Smart City Watch bridges the gap between citizens and urban management authorities through real-time geospatial intelligence. Our platform enables citizens to report infrastructure issues, track resolution progress, and access critical emergency services.</p><h2 style="font-weight:700;font-size:2rem;margin-bottom:24px">The Role of GIS</h2><p style="font-size:1.125rem;color:#475569;line-height:1.8;margin-bottom:48px">Geographic Information Systems form the backbone of our platform. Every report is geotagged with precise coordinates, enabling spatial analysis of urban issues for efficient resource allocation and informed decision-making.</p></div></div></section>
 
-<section style="padding:60px 0;background:#f1f5f9">
-  <div class="container">
-    <h2 style="font-weight:700;font-size:2rem;text-align:center;margin-bottom:48px">Our Team</h2>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px">
-      <div class="team-card"><div class="team-avatar">DA</div><h3 style="font-weight:700;margin-bottom:4px">Daim Awan</h3><p style="color:#475569;font-size:0.875rem">GIS Developer</p></div>
-      <div class="team-card"><div class="team-avatar">NI</div><h3 style="font-weight:700;margin-bottom:4px">Nauman Iqbal</h3><p style="color:#475569;font-size:0.875rem">Urban Planner</p></div>
-      <div class="team-card"><div class="team-avatar">AN</div><h3 style="font-weight:700;margin-bottom:4px">Abdullah Nawaz</h3><p style="color:#475569;font-size:0.875rem">Full-Stack Developer</p></div>
-      <div class="team-card"><div class="team-avatar">BA</div><h3 style="font-weight:700;margin-bottom:4px">Basit Aziz</h3><p style="color:#475569;font-size:0.875rem">Data Analyst</p></div>
-    </div>
-  </div>
-</section>
+<section style="padding:60px 0;background:#f1f5f9"><div class="container"><h2 style="font-weight:700;font-size:2rem;text-align:center;margin-bottom:48px">Our Team</h2><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px"><div class="team-card"><div class="team-avatar">DA</div><h3 style="font-weight:700;margin-bottom:4px">Daim Awan</h3><p style="color:#475569;font-size:0.875rem">GIS Developer</p></div><div class="team-card"><div class="team-avatar">NI</div><h3 style="font-weight:700;margin-bottom:4px">Nauman Iqbal</h3><p style="color:#475569;font-size:0.875rem">Urban Planner</p></div><div class="team-card"><div class="team-avatar">AN</div><h3 style="font-weight:700;margin-bottom:4px">Abdullah Nawaz</h3><p style="color:#475569;font-size:0.875rem">Full-Stack Developer</p></div><div class="team-card"><div class="team-avatar">BA</div><h3 style="font-weight:700;margin-bottom:4px">Basit Aziz</h3><p style="color:#475569;font-size:0.875rem">Data Analyst</p></div></div></div></section>
 
-<section style="padding:60px 0">
-  <div class="container">
-    <h2 style="font-weight:700;font-size:2rem;text-align:center;margin-bottom:48px">Emergency Contacts</h2>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:900px;margin:0 auto">
-      <div class="contact-card"><span class="material-symbols-outlined" style="font-size:36px;color:#dc2626;margin-bottom:12px">emergency</span><h3 style="font-weight:700;margin-bottom:8px">Rescue 1122</h3><p style="font-family:monospace;font-size:1.5rem;font-weight:700;color:#003f87">1122</p></div>
-      <div class="contact-card"><span class="material-symbols-outlined" style="font-size:36px;color:#003f87;margin-bottom:12px">local_police</span><h3 style="font-weight:700;margin-bottom:8px">Police</h3><p style="font-family:monospace;font-size:1.5rem;font-weight:700;color:#003f87">15</p></div>
-      <div class="contact-card"><span class="material-symbols-outlined" style="font-size:36px;color:#d97706;margin-bottom:12px">fire_truck</span><h3 style="font-weight:700;margin-bottom:8px">Fire Brigade</h3><p style="font-family:monospace;font-size:1.5rem;font-weight:700;color:#003f87">16</p></div>
-    </div>
-    <div style="margin-top:32px;padding:24px;background:#f1f5f9;border-radius:16px;text-align:center">
-      <h3 style="font-weight:700;margin-bottom:12px">Center for Geographical Information Systems</h3>
-      <p style="color:#475569">University of the Punjab, Lahore</p>
-      <p style="color:#475569;margin-top:8px">Final Year Project 2026 | Supervisor: Sir Haris</p>
-    </div>
-  </div>
-</section>
+<section style="padding:60px 0"><div class="container"><h2 style="font-weight:700;font-size:2rem;text-align:center;margin-bottom:48px">Emergency Contacts</h2><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:900px;margin:0 auto"><div class="contact-card"><span class="material-symbols-outlined" style="font-size:36px;color:#dc2626;margin-bottom:12px">emergency</span><h3 style="font-weight:700;margin-bottom:8px">Rescue 1122</h3><p style="font-family:monospace;font-size:1.5rem;font-weight:700;color:#003f87">1122</p></div><div class="contact-card"><span class="material-symbols-outlined" style="font-size:36px;color:#003f87;margin-bottom:12px">local_police</span><h3 style="font-weight:700;margin-bottom:8px">Police</h3><p style="font-family:monospace;font-size:1.5rem;font-weight:700;color:#003f87">15</p></div><div class="contact-card"><span class="material-symbols-outlined" style="font-size:36px;color:#d97706;margin-bottom:12px">fire_truck</span><h3 style="font-weight:700;margin-bottom:8px">Fire Brigade</h3><p style="font-family:monospace;font-size:1.5rem;font-weight:700;color:#003f87">16</p></div></div><div style="margin-top:32px;padding:24px;background:#f1f5f9;border-radius:16px;text-align:center"><h3 style="font-weight:700;margin-bottom:12px">Center for Geographical Information Systems</h3><p style="color:#475569">University of the Punjab, Lahore</p><p style="color:#475569;margin-top:8px">Final Year Project 2026 | Supervisor: Sir Haris</p></div></div></section>
 
-<footer style="background:#002a5c;color:white;padding:40px 0"><div class="container text-center"><p>© 2026 Lahore Smart City Watch — Final Year Project | GIS-Based Urban Intelligence Framework</p></div></footer>
+<footer style="background:#002a5c;color:white;padding:40px 0"><div class="container text-center"><p>© 2026 Lahore Smart City Watch — FYP | GIS-Based Urban Intelligence</p></div></footer>
 </body>
 </html>

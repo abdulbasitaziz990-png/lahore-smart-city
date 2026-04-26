@@ -18,6 +18,7 @@
     .security-notice { background: #fef3c7; border: 1px solid #d97706; border-radius: 10px; padding: 12px; font-size: 0.75rem; color: #d97706; margin-top: 20px; display: flex; align-items: center; gap: 8px; }
     .back-link { text-align: center; margin-top: 20px; font-size: 0.75rem; color: #64748b; }
     .back-link a { color: #003f87; font-weight: 500; }
+    @media (max-width: 480px) { .login-card { padding: 24px; } }
   </style>
 </head>
 <body>
@@ -29,36 +30,28 @@
       <p>Restricted Access — Authorized Personnel Only</p>
     </div>
     <form id="loginForm" onsubmit="handleLogin(event)">
-      <div style="margin-bottom:20px"><label style="display:block;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:#475569;margin-bottom:6px">Username</label><input type="text" id="username" style="width:100%;padding:12px;border:1.5px solid #cbd5e1;border-radius:10px" placeholder="Enter admin username" required autocomplete="off"></div>
-      <div style="margin-bottom:20px"><label style="display:block;font-size:0.75rem;font-weight:600;text-transform:uppercase;color:#475569;margin-bottom:6px">Password</label><input type="password" id="password" style="width:100%;padding:12px;border:1.5px solid #cbd5e1;border-radius:10px" placeholder="Enter password" required></div>
-      <button type="submit" style="width:100%;padding:14px;background:#003f87;color:white;border:none;border-radius:10px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span class="material-symbols-outlined">lock</span>Secure Sign In</button>
+      <div class="form-group"><label class="form-label">Username</label><input type="text" class="form-input" id="username" placeholder="Enter admin username" required autocomplete="off"></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="password" placeholder="Enter password" required></div>
+      <button type="submit" class="btn btn-primary w-full btn-lg"><span class="material-symbols-outlined">lock</span>Secure Sign In</button>
     </form>
-    <div class="security-notice"><span class="material-symbols-outlined">security</span>This portal is monitored 24/7. All access attempts are logged and audited.</div>
+    <div class="security-notice"><span class="material-symbols-outlined">security</span>This portal is monitored 24/7. All access attempts are logged.</div>
     <div class="back-link"><a href="/">← Return to Public Portal</a></div>
   </div>
 </div>
 <div id="toast-container"></div>
 <script src="/static/storage.js"></script>
 <script>
-const session = LSCW.getSession();
-if (session && session.role === 'admin') { window.location.href = '/admin-page.html'; }
+const session = LSCW.getSession(); if (session && session.role === 'admin') { window.location.href = '/admin-page.html'; }
 let attemptCount = 0;
+
 async function handleLogin(e) {
   e.preventDefault();
-  if (LSCW.isRateLimited('admin_login', 5)) { showToast('Too many failed attempts. Please try again in 15 minutes.', 'error'); return; }
-  const username = document.getElementById('username').value.trim();
-  const password = document.getElementById('password').value;
-  const result = await LSCW.loginAdmin(username, password);
+  if (LSCW.isRateLimited('admin_login', 5)) { showToast('Too many attempts. Try again in 15 min.', 'error'); return; }
+  const result = await LSCW.loginAdmin(document.getElementById('username').value.trim(), document.getElementById('password').value);
   if (result.ok) { showToast('Login successful!', 'success'); setTimeout(() => window.location.href = '/admin-page.html', 800); }
-  else { LSCW.recordAttempt('admin_login'); attemptCount++; const remaining = 5 - attemptCount; showToast(`Invalid credentials. ${remaining > 0 ? remaining + ' attempts remaining' : 'Account locked'}`, 'error'); }
+  else { LSCW.recordAttempt('admin_login'); attemptCount++; showToast(`Invalid credentials. ${5-attemptCount} attempts remaining.`, 'error'); }
 }
-function showToast(msg, type) {
-  const tc = document.getElementById('toast-container');
-  const t = document.createElement('div');
-  t.style.cssText = 'padding:12px 20px;border-radius:10px;margin-bottom:8px;color:white;font-weight:500';
-  t.style.background = type === 'success' ? '#059669' : type === 'error' ? '#dc2626' : '#1d6fdc';
-  t.textContent = msg; tc.appendChild(t); setTimeout(() => t.remove(), 4000);
-}
+function showToast(msg, type) { const tc = document.getElementById('toast-container'); const t = document.createElement('div'); t.style.cssText = 'padding:12px 20px;border-radius:10px;margin-bottom:8px;color:white;font-weight:500'; t.style.background = type === 'success' ? '#059669' : type === 'error' ? '#dc2626' : '#1d6fdc'; t.textContent = msg; tc.appendChild(t); setTimeout(() => t.remove(), 4000); }
 </script>
 </body>
 </html>

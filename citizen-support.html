@@ -12,21 +12,15 @@
     .resolved-report-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .ticket-item { background: white; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; margin-bottom: 16px; cursor: pointer; transition: all 0.2s; }
     .ticket-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-color: #003f87; }
+    @media (max-width: 768px) { .page-container { padding-top: 70px; } }
   </style>
 </head>
 <body>
 
 <nav class="topnav">
   <a class="topnav-brand" href="/citizen.html"><span class="material-symbols-outlined">location_city</span>Lahore Smart City Watch</a>
-  <div class="topnav-links">
-    <a href="/citizen.html">My Reports</a>
-    <a href="/emergency.html">Emergency</a>
-    <a href="/citizen-support.html" class="active">Support</a>
-  </div>
-  <div class="topnav-actions">
-    <span id="userNameDisplay"></span>
-    <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
-  </div>
+  <div class="topnav-links"><a href="/citizen.html">My Reports</a><a href="/emergency.html">Emergency</a><a href="/citizen-support.html" class="active">Support</a></div>
+  <div class="topnav-actions"><span id="userNameDisplay"></span><button class="btn btn-outline btn-sm" onclick="logout()">Logout</button></div>
 </nav>
 
 <main class="page-container">
@@ -52,7 +46,7 @@
       <form id="ticketForm" onsubmit="submitTicket(event)">
         <input type="hidden" id="selectedReportId">
         <div class="form-group"><label class="form-label">Report</label><input type="text" class="form-input" id="selectedReportDisplay" readonly></div>
-        <div class="form-group"><label class="form-label">Subject</label><input type="text" class="form-input" id="ticketSubject" placeholder="e.g., Issue not fully resolved" required></div>
+        <div class="form-group"><label class="form-label">Subject</label><input type="text" class="form-input" id="ticketSubject" required></div>
         <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" id="ticketMessage" rows="4" required></textarea></div>
         <button type="submit" class="btn btn-primary w-full">Submit Ticket</button>
       </form>
@@ -64,53 +58,31 @@
 
 <script src="/static/storage.js"></script>
 <script>
-const session = LSCW.getSession();
-if (!session) window.location.href = '/';
+const session = LSCW.getSession(); if (!session) window.location.href = '/';
 document.getElementById('userNameDisplay').textContent = session.name;
 
 function loadResolvedReports() {
   const reports = LSCW.getReportsByUser(session.userId).filter(r => r.status === 'resolved');
   const container = document.getElementById('resolvedReportsList');
-  if (reports.length === 0) { container.innerHTML = '<p style="color:#64748b;text-align:center;padding:32px">No resolved reports yet. Support tickets become available after reports are resolved.</p>'; return; }
-  container.innerHTML = reports.map(report => `
-    <div class="resolved-report-card">
-      <div style="display:flex;justify-content:space-between;margin-bottom:12px"><span style="font-family:monospace;color:#003f87">${report.reportId}</span><span class="badge badge-success">Resolved</span></div>
-      <div style="font-weight:600;margin-bottom:8px">${LSCW.sanitise(report.category)}</div>
-      <div style="font-size:0.8rem;color:#475569;margin-bottom:16px">${LSCW.sanitise(report.description).substring(0,80)}...</div>
-      <button class="btn btn-primary btn-sm w-full" onclick="openNewTicket('${report.id}', '${report.reportId}', '${report.category}')">Create Support Ticket</button>
-    </div>`).join('');
+  if (reports.length === 0) { container.innerHTML = '<p style="color:#64748b;text-align:center;padding:32px">No resolved reports yet.</p>'; return; }
+  container.innerHTML = reports.map(report => `<div class="resolved-report-card"><div style="display:flex;justify-content:space-between;margin-bottom:12px"><span style="font-family:monospace;color:#003f87">${report.reportId}</span><span class="badge badge-success">Resolved</span></div><div style="font-weight:600;margin-bottom:8px">${LSCW.sanitise(report.category)}</div><button class="btn btn-primary btn-sm w-full" onclick="openNewTicket('${report.id}', '${report.reportId}', '${report.category}')">Create Support Ticket</button></div>`).join('');
 }
 
 function loadTickets() {
   const tickets = LSCW.getTicketsByUser(session.userId);
   const container = document.getElementById('ticketsList');
   if (tickets.length === 0) { container.innerHTML = '<p style="color:#64748b;text-align:center;padding:32px">No support tickets yet.</p>'; return; }
-  container.innerHTML = tickets.map(ticket => `
-    <div class="ticket-item">
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-family:monospace;color:#003f87">${ticket.ticketNumber}</span><span class="badge badge-warning">${ticket.status}</span></div>
-      <div style="font-weight:600;margin-bottom:8px">${LSCW.sanitise(ticket.subject)}</div>
-      <div style="font-size:0.8rem;color:#475569">${ticket.messages.length} messages</div>
-    </div>`).join('');
+  container.innerHTML = tickets.map(ticket => `<div class="ticket-item"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-family:monospace;color:#003f87">${ticket.ticketNumber}</span><span class="badge badge-warning">${ticket.status}</span></div><div style="font-weight:600;margin-bottom:8px">${LSCW.sanitise(ticket.subject)}</div><div style="font-size:0.8rem;color:#475569">${ticket.messages.length} messages</div></div>`).join('');
 }
 
 function openNewTicket(reportId, reportNumber, category) { document.getElementById('selectedReportId').value = reportId; document.getElementById('selectedReportDisplay').value = `${reportNumber} - ${category}`; openModal('newTicketModal'); }
-
-function submitTicket(e) {
-  e.preventDefault();
-  const result = LSCW.createTicket({ reportId: document.getElementById('selectedReportId').value, userId: session.userId, userName: session.name, subject: document.getElementById('ticketSubject').value, message: document.getElementById('ticketMessage').value });
-  if (result.ok) { closeModal('newTicketModal'); document.getElementById('ticketForm').reset(); loadTickets(); showToast('Ticket created!', 'success'); }
-  else { showToast(result.error, 'error'); }
-}
+function submitTicket(e) { e.preventDefault(); const result = LSCW.createTicket({ reportId: document.getElementById('selectedReportId').value, userId: session.userId, userName: session.name, subject: document.getElementById('ticketSubject').value, message: document.getElementById('ticketMessage').value }); if (result.ok) { closeModal('newTicketModal'); document.getElementById('ticketForm').reset(); loadTickets(); showToast('Ticket created!', 'success'); } else { showToast('Error creating ticket', 'error'); } }
 
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
 function showToast(msg, type) { const tc = document.getElementById('toast-container'); const t = document.createElement('div'); t.className = `toast toast-${type}`; t.innerHTML = `<span class="material-symbols-outlined">${type==='success'?'check_circle':'error'}</span> ${msg}`; tc.appendChild(t); setTimeout(() => t.remove(), 3500); }
-
 function logout() { LSCW.clearSession(); window.location.href = '/'; }
-
 document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('active'); }); });
-
 loadResolvedReports(); loadTickets();
 </script>
 </body>
