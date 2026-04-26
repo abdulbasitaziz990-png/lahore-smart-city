@@ -5,7 +5,7 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'name', 'phone', 'role', 'is_verified', 'zone', 'created_at']
+        fields = ['id', 'email', 'name', 'phone', 'role', 'is_verified', 'created_at']
         read_only_fields = ['id', 'created_at']
 
 
@@ -29,8 +29,3 @@ class RegisterSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
-
-
-class OTPSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    otp = serializers.CharField(max_length=6)
