@@ -33,19 +33,104 @@ function formatDate(d) { if (!d) return ''; return new Date(d).toLocaleDateStrin
 function timeAgo(d) { if (!d) return ''; const diff = Date.now() - new Date(d).getTime(); const m = Math.floor(diff / 60000); if (m < 1) return 'Just now'; if (m < 60) return m + 'm ago'; const h = Math.floor(m / 60); if (h < 24) return h + 'h ago'; return Math.floor(h / 24) + 'd ago'; }
 function generateReportId() { return 'LHR-' + Date.now().toString().slice(-8) + '-' + Math.floor(Math.random() * 1000).toString().padStart(3, '0'); }
 
-function getReports() { return JSON.parse(localStorage.getItem('lscw_reports') || '[]'); }
-function saveReport(report) { const reports = getReports(); report.id = Date.now().toString(36); report.reportId = report.reportId || generateReportId(); report.status = 'pending'; report.createdAt = new Date().toISOString(); report.zone = report.zone || 'Lahore'; report.adminNotes = ''; report.adminPhoto = null; report.estimatedResolution = null; report.resolutionDate = null; reports.push(report); localStorage.setItem('lscw_reports', JSON.stringify(reports)); const notif = JSON.parse(localStorage.getItem('lscw_notifications') || '[]'); notif.push({ id: Date.now().toString(36), userId: 'admin-001', title: 'New Report', message: `${report.category} by ${report.reportedBy}`, type: 'new_report', reportId: report.id, read: false, createdAt: new Date().toISOString() }); localStorage.setItem('lscw_notifications', JSON.stringify(notif)); return report; }
-function getReportsByUser(userId) { return getReports().filter(r => r.reporterId === userId); }
-function getReportsByUserEmail(email) { return getReports().filter(r => r.reporterEmail === email); }
-function updateReportStatus(id, status, data = {}) { const reports = getReports(); const idx = reports.findIndex(r => r.id === id); if (idx >= 0) { reports[idx].status = status; if (data.notes) reports[idx].adminNotes = data.notes; if (data.photo) reports[idx].adminPhoto = data.photo; if (data.estimatedResolution) reports[idx].estimatedResolution = data.estimatedResolution; if (status === 'resolved') reports[idx].resolutionDate = new Date().toISOString(); const sameCat = reports.filter(r => r.category === reports[idx].category && r.status !== 'resolved'); if (sameCat.length >= 3) { sameCat.forEach(r => { if (r.priority !== 'urgent') r.priority = 'urgent'; }); } localStorage.setItem('lscw_reports', JSON.stringify(reports)); if (reports[idx].reporterId) { const notif = JSON.parse(localStorage.getItem('lscw_notifications') || '[]'); notif.push({ id: Date.now().toString(36), userId: reports[idx].reporterId, title: 'Status Updated', message: `Your ${reports[idx].category} report is now ${status}`, type: 'status_update', reportId: id, read: false, createdAt: new Date().toISOString() }); localStorage.setItem('lscw_notifications', JSON.stringify(notif)); } return true; } return false; }
-function getReportById(id) { return getReports().find(r => r.id === id); }
+// 🔧 FIXED: Reports from API
+async function getReports() {
+    const token = getToken();
+    if (token) {
+        try {
+            const res = await fetch('/api/reports/', { headers: { 'Authorization': `Bearer ${token}` } });
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                const formatted = data.map(r => ({
+                    id: r.id, reportId: r.report_number, category: r.category, description: r.description,
+                    lat: parseFloat(r.latitude), lng: parseFloat(r.longitude), address: r.address || '',
+                    zone: r.zone || 'Lahore', status: r.status, priority: r.priority,
+                    reportedBy: r.reporter_name, reporterEmail: r.reporter_email,
+                    reporterPhone: r.reporter_phone, reporterId: r.reporter,
+                    createdAt: r.created_at, photo: r.photo || null,
+                    adminNotes: r.admin_notes || '', adminPhoto: r.admin_photo || null,
+                    estimatedResolution: r.estimated_resolution || null,
+                    resolutionDate: r.resolution_date || null
+                }));
+                localStorage.setItem('lscw_reports', JSON.stringify(formatted));
+                return formatted;
+            }
+        } catch(e) { console.log('API fetch failed, using localStorage'); }
+    }
+    return JSON.parse(localStorage.getItem('lscw_reports') || '[]');
+}
+
+async function saveReport(report) {
+    const token = getToken();
+    if (token) {
+        try {
+            const fd = new FormData();
+            fd.append('category', report.category);
+            fd.append('description', report.description);
+            fd.append('latitude', report.lat);
+            fd.append('longitude', report.lng);
+            fd.append('address', report.address || '');
+            fd.append('priority', report.priority || 'normal');
+            fd.append('reporter_name', report.reportedBy || '');
+            fd.append('reporter_email', report.reporterEmail || '');
+            fd.append('reporter_phone', report.reporterPhone || '');
+            if (report.photoFile) fd.append('photo', report.photoFile);
+            
+            const res = await fetch('/api/reports/', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: fd });
+            const data = await res.json();
+            if (data.id) {
+                const r = {
+                    id: data.id, reportId: data.report_number, category: data.category, description: data.description,
+                    lat: parseFloat(data.latitude), lng: parseFloat(data.longitude), address: data.address || '',
+                    zone: data.zone || 'Lahore', status: data.status, priority: data.priority,
+                    reportedBy: report.reportedBy, reporterEmail: report.reporterEmail,
+                    reporterPhone: report.reporterPhone, reporterId: report.reporterId,
+                    createdAt: data.created_at, photo: data.photo || null,
+                    adminNotes: '', adminPhoto: null, estimatedResolution: null, resolutionDate: null
+                };
+                const reports = JSON.parse(localStorage.getItem('lscw_reports') || '[]');
+                reports.push(r);
+                localStorage.setItem('lscw_reports', JSON.stringify(reports));
+                return r;
+            }
+        } catch(e) { console.log('API save failed'); }
+    }
+    // Fallback to localStorage
+    const reports = JSON.parse(localStorage.getItem('lscw_reports') || '[]');
+    report.id = Date.now().toString(36);
+    report.reportId = report.reportId || generateReportId();
+    report.status = 'pending';
+    report.createdAt = new Date().toISOString();
+    report.zone = report.zone || 'Lahore';
+    reports.push(report);
+    localStorage.setItem('lscw_reports', JSON.stringify(reports));
+    return report;
+}
+
+function getReportsByUser(userId) { const reports = JSON.parse(localStorage.getItem('lscw_reports') || '[]'); return reports.filter(r => r.reporterId === userId); }
+function getReportsByUserEmail(email) { const reports = JSON.parse(localStorage.getItem('lscw_reports') || '[]'); return reports.filter(r => r.reporterEmail === email); }
+
+function updateReportStatus(id, status, data = {}) { 
+    const reports = JSON.parse(localStorage.getItem('lscw_reports') || '[]'); 
+    const idx = reports.findIndex(r => r.id === id); 
+    if (idx >= 0) { 
+        reports[idx].status = status; 
+        if (data.notes) reports[idx].adminNotes = data.notes; 
+        if (data.photo) reports[idx].adminPhoto = data.photo; 
+        if (status === 'resolved') reports[idx].resolutionDate = new Date().toISOString(); 
+        localStorage.setItem('lscw_reports', JSON.stringify(reports)); 
+        return true; 
+    } 
+    return false; 
+}
+function getReportById(id) { const reports = JSON.parse(localStorage.getItem('lscw_reports') || '[]'); return reports.find(r => r.id === id); }
 
 function getZones() { return [{ id: 'gulberg', name: 'Gulberg', areas: ['Gulberg II', 'Gulberg III', 'Main Boulevard', 'Liberty', 'MM Alam Road'] }, { id: 'johar', name: 'Johar Town', areas: ['Block A', 'Block G', 'Block R', 'Expo Centre'] }, { id: 'dha', name: 'DHA', areas: ['Phase 1', 'Phase 5', 'Phase 6', 'Phase 8'] }, { id: 'modeltown', name: 'Model Town', areas: ['A Block', 'B Block', 'C Block', 'D Block'] }, { id: 'iqbal', name: 'Iqbal Town', areas: ['Township', 'Punjab Society', 'Pak Arab Society'] }, { id: 'cantt', name: 'Cantt', areas: ['Saddar', 'Garrison', 'Askari', 'Fortress'] }, { id: 'walled', name: 'Walled City', areas: ['Androon Lahore', 'Delhi Gate', 'Bhati Gate'] }, { id: 'faisal', name: 'Faisal Town', areas: ['Faisal Town', 'Canal Road', 'Muslim Town'] }, { id: 'garden', name: 'Garden Town', areas: ['Garden Town', 'Kalma Chowk', 'Mozang'] }, { id: 'shadman', name: 'Shadman', areas: ['Shadman Colony', 'Jail Road', 'Mall Road'] }]; }
 function getZoneByCoordinates(lat, lng) { return { name: 'Gulberg' }; }
-function getReportsByZone(name) { return getReports().filter(r => r.zone === name); }
+function getReportsByZone(name) { const reports = JSON.parse(localStorage.getItem('lscw_reports') || '[]'); return reports.filter(r => r.zone === name); }
 
-function getNotifications(userId) { const all = JSON.parse(localStorage.getItem('lscw_notifications') || '[]'); return all.filter(n => n.userId === userId && !n.read).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)); }
-function getAllNotifications(userId) { const all = JSON.parse(localStorage.getItem('lscw_notifications') || '[]'); return all.filter(n => n.userId === userId).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)); }
+function getNotifications(userId) { const all = JSON.parse(localStorage.getItem('lscw_notifications') || '[]'); return all.filter(n => n.userId === userId && !n.read); }
+function getAllNotifications(userId) { const all = JSON.parse(localStorage.getItem('lscw_notifications') || '[]'); return all.filter(n => n.userId === userId); }
 function getUnreadCount(userId) { return getNotifications(userId).length; }
 function markAllNotificationsRead(userId) { const all = JSON.parse(localStorage.getItem('lscw_notifications') || '[]'); all.forEach(n => { if (n.userId === userId) n.read = true; }); localStorage.setItem('lscw_notifications', JSON.stringify(all)); }
 
